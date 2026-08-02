@@ -990,58 +990,114 @@
     // ============================================
     // হ্যান্ডলার
     // ============================================
-    function handleBuy() {
-      const amount = parseFloat($('pAmount').value);
-      if (!amount || amount <= 0) { showToast('টাকার পরিমাণ দিন', 'error'); return; }
-      addTransaction({
-        type: 'buy', amount, description: $('pDesc').value.trim(),
-        title: 'বিনিয়োগ', date: $('pDate').value || new Date().toISOString().split('T')[0],
-        customerName: '', paymentType: ''
-      });
-      closePopup();
-      showToast('ক্রয় সংরক্ষিত হয়েছে', 'success');
-    }
+    async function handleBuy() {
+  const amount = parseFloat($('pAmount').value);
+  if (!amount || amount <= 0) { showToast('টাকার পরিমাণ দিন', 'error'); return; }
+  
+  // ট্রানজেকশন যোগ করুন
+  addTransaction({
+    type: 'buy',
+    amount,
+    description: $('pDesc').value.trim(),
+    title: 'বিনিয়োগ',
+    date: $('pDate').value || new Date().toISOString().split('T')[0],
+    customerName: '',
+    paymentType: ''
+  });
+  
+  closePopup();
+  showToast('ক্রয় সংরক্ষিত হয়েছে', 'success');
+  
+  // সম্পূর্ণ প্রজেক্ট রিলোড করুন
+  setTimeout(() => {
+    window.location.reload();
+  }, 300);
+}
 
-    function handleSell() {
-      const custName = document.getElementById('pCustName') ? document.getElementById('pCustName').value : '';
-      const amount = parseFloat($('pAmount').value);
-      if (!custName) { showToast('কাস্টমার সিলেক্ট করুন', 'error'); return; }
-      if (!amount || amount <= 0) { showToast('টাকার পরিমাণ দিন', 'error'); return; }
-      addTransaction({
-        type: 'sell', amount, description: $('pDesc').value.trim(),
-        title: 'বিক্রয়', date: $('pDate').value || new Date().toISOString().split('T')[0],
-        customerName: custName, customerId: document.getElementById('pCustId').value,
-        paymentType: paymentType
-      });
-      closePopup();
-      showToast('বিক্রয় সংরক্ষিত হয়েছে', 'success');
-    }
+    async function handleSell() {
+  const custName = document.getElementById('pCustName') ? document.getElementById('pCustName').value : '';
+  const amount = parseFloat($('pAmount').value);
+  if (!custName) { showToast('কাস্টমার সিলেক্ট করুন', 'error'); return; }
+  if (!amount || amount <= 0) { showToast('টাকার পরিমাণ দিন', 'error'); return; }
+  
+  addTransaction({
+    type: 'sell',
+    amount,
+    description: $('pDesc').value.trim(),
+    title: 'বিক্রয়',
+    date: $('pDate').value || new Date().toISOString().split('T')[0],
+    customerName: custName,
+    customerId: document.getElementById('pCustId').value,
+    paymentType: paymentType
+  });
+  
+  closePopup();
+  showToast('বিক্রয় সংরক্ষিত হয়েছে', 'success');
+  
+  // ডাটা রিলোড ইভেন্ট ট্রিগার করুন
+  document.dispatchEvent(new CustomEvent('dataReload'));
+  
+  // অথবা সরাসরি রিলোড
+  setTimeout(() => {
+    location.reload();
+  }, 500); // টোস্ট দেখানোর জন্য সামান্য দেরি
+}
 
     // ★ সরাসরি বিক্রয় হ্যান্ডলার - শুধু টাইটেল + টাকা
-    function handleManualSell() {
-      const title = $('pManualTitle').value.trim();
-      const amount = parseFloat($('pAmount').value);
-      if (!title) { showToast('বিবরণ দিন', 'error'); return; }
-      if (!amount || amount <= 0) { showToast('টাকার পরিমাণ দিন', 'error'); return; }
-      addTransaction({
-        type: 'sell', amount, description: title,
-        title: 'সরাসরি বিক্রয়', date: new Date().toISOString().split('T')[0],
-        customerName: '', paymentType: 'paid', isManualSell: true
-      });
-      closePopup();
-      showToast('সরাসরি বিক্রয় সংরক্ষিত', 'success');
-    }
+    async function handleManualSell() {
+  const title = $('pManualTitle').value.trim();
+  const amount = parseFloat($('pAmount').value);
+  if (!title) { showToast('বিবরণ দিন', 'error'); return; }
+  if (!amount || amount <= 0) { showToast('টাকার পরিমাণ দিন', 'error'); return; }
+  
+  // ট্রানজেকশন যোগ করুন
+  addTransaction({
+    type: 'sell',
+    amount,
+    description: title,
+    title: 'সরাসরি বিক্রয়',
+    date: new Date().toISOString().split('T')[0],
+    customerName: '',
+    paymentType: 'paid',
+    isManualSell: true
+  });
+  
+  closePopup();
+  showToast('সরাসরি বিক্রয় সংরক্ষিত', 'success');
+  
+  // সম্পূর্ণ প্রজেক্ট রিলোড করুন
+  setTimeout(() => {
+    window.location.reload();
+  }, 300);
+}
 
     function handleAddCustomer() {
-      const name = $('pCustNameInput').value.trim();
-      if (!name) { showToast('নাম দিন', 'error'); return; }
-      if (customers.find(c => c.name.toLowerCase() === name.toLowerCase())) {
-        showToast('এই নামে কাস্টমার আছে', 'error'); return;
-      }
-      addCustomer({ name, phone: $('pCustPhone').value.trim(), address: $('pCustAddress').value.trim() });
-      closePopup();
-      showToast('কাস্টমার যোগ হয়েছে', 'success');
-    }
+  const name = $('pCustNameInput').value.trim();
+  if (!name) {
+    showToast('নাম দিন', 'error');
+    return;
+  }
+  
+  if (customers.find(c => c.name.toLowerCase() === name.toLowerCase())) {
+    showToast('এই নামে কাস্টমার আছে', 'error');
+    return;
+  }
+  
+  // কাস্টমার যোগ করুন
+  addCustomer({
+    name: name,
+    phone: $('pCustPhone').value.trim(),
+    address: $('pCustAddress').value.trim()
+  });
+  
+  closePopup();
+  showToast('কাস্টমার যোগ হয়েছে', 'success');
+  
+  // সম্পূর্ণ প্রজেক্ট রিলোড করুন
+  setTimeout(() => {
+    location.reload(true); // true = ক্যাশ ক্লিয়ার করে রিলোড
+  }, 500); // টোস্ট মেসেজ দেখানোর জন্য সামান্য delay
+}
 
     function renderCustomerViewPopup(custId) {
       const c = customers.find(x => x.id === custId);
