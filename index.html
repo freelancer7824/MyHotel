@@ -56,14 +56,16 @@
     .loss-cover-card .cover-sub{color:#64748b;font-size:0.7rem;font-weight:500;margin-left:0.3rem;}
     .loss-cover-card .cover-status{font-size:0.7rem;font-weight:600;padding:0.2rem 0.8rem;border-radius:40px;background:#f1f5f9;color:#334155;}
     .action-section{display:flex;gap:0.8rem;flex-wrap:wrap;margin:0.8rem 0 1.2rem;justify-content:center;}
-    .action-btn{border:none;padding:0.6rem 1.6rem;border-radius:60px;font-weight:600;font-size:0.85rem;display:inline-flex;align-items:center;gap:0.4rem;transition:0.1s;cursor:pointer;flex:1 1 auto;justify-content:center;background:#fff;border:1px solid #e9edf2;font-family:inherit;}
+    .action-btn{border:none;padding:0.6rem 1.6rem;border-radius:60px;font-weight:600;font-size:0.85rem;display:inline-flex;align-items:center;gap:0.4rem;transition:0.15s;cursor:pointer;flex:1 1 auto;justify-content:center;background:#fff;border:1px solid #e9edf2;font-family:inherit;}
     .action-btn i{font-size:1rem;}
     .action-btn.buy{background:#eff6ff;border-color:#bfdbfe;color:#1e3a8a;}
-    .action-btn.buy:hover{background:#dbeafe;}
+    .action-btn.buy:hover{background:#dbeafe;transform:translateY(-1px);}
     .action-btn.sell{background:#f0fdf4;border-color:#bbf7d0;color:#14532d;}
-    .action-btn.sell:hover{background:#dcfce7;}
+    .action-btn.sell:hover{background:#dcfce7;transform:translateY(-1px);}
     .action-btn.manual-sell{background:#fef3c7;border-color:#fcd34d;color:#92400e;}
-    .action-btn.manual-sell:hover{background:#fde68a;}
+    .action-btn.manual-sell:hover{background:#fde68a;transform:translateY(-1px);}
+    .action-btn.loan-pay{background:#fef2f2;border-color:#fca5a5;color:#991b1b;}
+    .action-btn.loan-pay:hover{background:#fee2e2;transform:translateY(-1px);}
     .chart-section{background:#fff;border-radius:28px;padding:1rem 0.8rem;margin:1rem 0 0.2rem;border:1px solid #f1f5f9;}
     .chart-section h3{display:flex;align-items:center;gap:0.4rem;color:#0b1a33;font-weight:600;margin-bottom:0.8rem;font-size:0.9rem;}
     .chart-section h3 i{color:#2563eb;}
@@ -74,7 +76,7 @@
     .history-filters label{font-weight:500;color:#334155;font-size:0.75rem;}
     .history-filters input[type="date"],.history-filters input[type="month"],.history-filters input[type="number"]{padding:0.3rem 0.6rem;border-radius:40px;border:1.5px solid #e9edf2;font-size:0.75rem;background:#fafcff;font-family:inherit;}
     .history-filters input:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.06);}
-    .history-filters button{padding:0.3rem 1rem;border-radius:40px;border:none;background:#2563eb;color:white;font-weight:600;font-size:0.75rem;cursor:pointer;font-family:inherit;}
+    .history-filters button{padding:0.3rem 1rem;border-radius:40px;border:none;background:#2563eb;color:white;font-weight:600;font-size:0.75rem;cursor:pointer;font-family:inherit;transition:background 0.15s;}
     .history-filters button:hover{background:#1d4ed8;}
     .history-filters .reset-btn{background:#e9edf2;color:#334155;}
     .history-filters .reset-btn:hover{background:#d1d5db;}
@@ -86,19 +88,22 @@
     .history-item .h-right{font-weight:700;white-space:nowrap;margin-left:0.5rem;}
     .history-item .h-right.buy{color:#2563eb;}
     .history-item .h-right.sell{color:#16a34a;}
+    .history-item .h-right.loan-pay-type{color:#7c3aed;}
+    .history-item .h-right .h-del-btn{margin-left:0.5rem;background:none;border:none;color:#cbd5e1;cursor:pointer;font-size:0.8rem;transition:color 0.15s;}
+    .history-item .h-right .h-del-btn:hover{color:#dc2626;}
     .history-empty{color:#94a3b8;text-align:center;padding:2rem 0;font-size:0.9rem;}
     .customer-list-page{background:#fff;border-radius:28px;padding:1rem;border:1px solid #f1f5f9;margin-top:1rem;}
     .customer-list-page h3{font-size:1rem;color:#0b1a33;margin-bottom:0.8rem;display:flex;align-items:center;gap:0.5rem;}
     .customer-search{width:100%;padding:0.5rem 1rem;border-radius:40px;border:1.5px solid #e9edf2;font-size:0.85rem;margin-bottom:1rem;background:#fafcff;font-family:inherit;}
     .customer-search:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.06);}
-    .customer-card-item{background:#f8fafc;border-radius:16px;padding:0.8rem 1rem;margin-bottom:0.6rem;border:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;transition:0.1s;}
+    .customer-card-item{background:#f8fafc;border-radius:16px;padding:0.8rem 1rem;margin-bottom:0.6rem;border:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;transition:0.15s;}
     .customer-card-item:hover{background:#f1f5f9;}
     .customer-card-item .cust-info{flex:1;min-width:0;}
     .customer-card-item .cust-info .cust-name{font-weight:600;color:#0b1a33;font-size:0.95rem;}
     .customer-card-item .cust-info .cust-details{font-size:0.75rem;color:#64748b;}
     .customer-card-item .cust-due{font-weight:700;color:#dc2626;font-size:0.95rem;margin-right:0.8rem;}
     .customer-card-item .cust-actions{display:flex;gap:0.4rem;flex-wrap:wrap;}
-    .customer-card-item .cust-actions button{padding:0.3rem 0.7rem;border-radius:40px;border:none;font-size:0.7rem;font-weight:600;cursor:pointer;transition:0.1s;font-family:inherit;}
+    .customer-card-item .cust-actions button{padding:0.3rem 0.7rem;border-radius:40px;border:none;font-size:0.7rem;font-weight:600;cursor:pointer;transition:0.15s;font-family:inherit;}
     .cust-actions .view-btn{background:#dbeafe;color:#1e3a8a;}
     .cust-actions .view-btn:hover{background:#bfdbfe;}
     .cust-actions .edit-btn{background:#fef3c7;color:#92400e;}
@@ -110,7 +115,7 @@
     .analysis-filters label{font-weight:500;color:#334155;font-size:0.8rem;}
     .analysis-filters input[type="month"]{padding:0.4rem 0.8rem;border-radius:40px;border:1.5px solid #e9edf2;font-size:0.8rem;background:#fafcff;font-family:inherit;}
     .analysis-filters input[type="month"]:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.06);}
-    .analysis-filters button{padding:0.4rem 1.2rem;border-radius:40px;border:none;background:#2563eb;color:white;font-weight:600;font-size:0.8rem;cursor:pointer;font-family:inherit;}
+    .analysis-filters button{padding:0.4rem 1.2rem;border-radius:40px;border:none;background:#2563eb;color:white;font-weight:600;font-size:0.8rem;cursor:pointer;font-family:inherit;transition:background 0.15s;}
     .analysis-filters button:hover{background:#1d4ed8;}
     .analysis-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.6rem;margin-top:1rem;}
     .analysis-summary-card{background:#fff;border-radius:20px;padding:0.6rem 0.4rem;text-align:center;border:1px solid #f1f5f9;}
@@ -121,24 +126,27 @@
     .analysis-summary-card.red .value{color:#dc2626;}
     .analysis-summary-card.blue .value{color:#2563eb;}
     .analysis-summary-card.purple .value{color:#7c3aed;}
-    .popup-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.4);backdrop-filter:blur(6px);display:none;justify-content:center;align-items:center;z-index:999;padding:1rem;animation:fadeIn 0.15s ease;}
+    .popup-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.45);backdrop-filter:blur(8px);display:none;justify-content:center;align-items:center;z-index:999;padding:1rem;animation:fadeIn 0.15s ease;}
     .popup-overlay.active{display:flex;}
-    .popup-box{background:white;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;border-radius:40px;padding:1.6rem 1.4rem;box-shadow:0 40px 80px rgba(0,0,0,0.12);animation:scaleUp 0.15s ease;}
+    .popup-box{background:white;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;border-radius:40px;padding:1.6rem 1.4rem;box-shadow:0 40px 80px rgba(0,0,0,0.15);animation:scaleUp 0.2s ease;}
     @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-    @keyframes scaleUp{from{transform:scale(0.95);opacity:0.5;}to{transform:scale(1);opacity:1;}}
+    @keyframes scaleUp{from{transform:scale(0.92);opacity:0.4;}to{transform:scale(1);opacity:1;}}
     .popup-box .popup-title{font-size:1.3rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:0.4rem;color:#0b1a33;}
     .popup-box label{font-weight:500;color:#334155;display:block;margin-top:0.6rem;margin-bottom:0.2rem;font-size:0.8rem;}
-    .popup-box input,.popup-box textarea,.popup-box select{width:100%;padding:0.6rem 1rem;border-radius:40px;border:1.5px solid #e9edf2;font-size:0.9rem;background:#fafcff;font-family:inherit;}
+    .popup-box input,.popup-box textarea,.popup-box select{width:100%;padding:0.6rem 1rem;border-radius:40px;border:1.5px solid #e9edf2;font-size:0.9rem;background:#fafcff;font-family:inherit;transition:border-color 0.15s,box-shadow 0.15s;}
     .popup-box input:focus,.popup-box textarea:focus,.popup-box select:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 4px rgba(37,99,235,0.06);}
     .popup-box textarea{border-radius:20px;resize:vertical;min-height:50px;}
     .popup-actions{display:flex;gap:0.6rem;margin-top:1.4rem;justify-content:flex-end;flex-wrap:wrap;}
-    .popup-actions button{padding:0.5rem 1.4rem;border-radius:60px;border:none;font-weight:600;font-size:0.85rem;cursor:pointer;font-family:inherit;}
+    .popup-actions button{padding:0.5rem 1.4rem;border-radius:60px;border:none;font-weight:600;font-size:0.85rem;cursor:pointer;font-family:inherit;transition:background 0.15s,transform 0.1s;}
+    .popup-actions button:active{transform:scale(0.97);}
     .popup-actions .btn-confirm{background:#0b1a33;color:white;}
     .popup-actions .btn-confirm:hover{background:#1e293b;}
     .popup-actions .btn-cancel{background:#f1f5f9;color:#334155;}
     .popup-actions .btn-cancel:hover{background:#e2e8f0;}
     .popup-actions .btn-danger{background:#dc2626;color:white;}
     .popup-actions .btn-danger:hover{background:#b91c1c;}
+    .popup-actions .btn-loan-pay{background:#7c3aed;color:white;}
+    .popup-actions .btn-loan-pay:hover{background:#6d28d9;}
     .cust-search-wrap{position:relative;}
     .cust-dropdown{position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid #e9edf2;border-radius:16px;max-height:160px;overflow-y:auto;z-index:10;display:none;box-shadow:0 8px 24px rgba(0,0,0,0.1);margin-top:2px;}
     .cust-dropdown.show{display:block;}
@@ -146,6 +154,8 @@
     .cust-dropdown .cust-drop-item:last-child{border-bottom:none;}
     .cust-dropdown .cust-drop-item:hover,.cust-dropdown .cust-drop-item.selected{background:#eff6ff;}
     .cust-dropdown .cust-drop-item .cust-drop-phone{font-size:0.7rem;color:#94a3b8;}
+    .cust-dropdown .cust-drop-item .cust-drop-due{font-size:0.75rem;font-weight:700;color:#dc2626;}
+    .cust-dropdown .cust-drop-item .cust-drop-no-due{font-size:0.75rem;color:#94a3b8;}
     .payment-type-group{display:flex;gap:0.5rem;margin-top:0.2rem;}
     .payment-type-group button{padding:0.4rem 1rem;border-radius:40px;border:2px solid #e9edf2;background:#fafcff;cursor:pointer;font-size:0.8rem;font-weight:500;flex:1;transition:all 0.15s;font-family:inherit;}
     .payment-type-group button.active{border-color:#2563eb;background:#eff6ff;color:#1e3a8a;box-shadow:0 0 0 3px rgba(37,99,235,0.15);}
@@ -181,9 +191,10 @@
     .login-popup-box .social-btn.github:hover{background:#f1f5f9;}
     .login-popup-box .divider{display:flex;align-items:center;gap:0.8rem;margin:1rem 0;color:#94a3b8;font-size:0.8rem;}
     .login-popup-box .divider::before,.login-popup-box .divider::after{content:'';flex:1;height:1px;background:#e9edf2;}
-    .toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#0b1a33;color:#fff;padding:0.6rem 1.4rem;border-radius:60px;font-size:0.85rem;font-weight:500;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.2);animation:toastIn 0.3s ease;pointer-events:none;}
+    .toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#0b1a33;color:#fff;padding:0.6rem 1.4rem;border-radius:60px;font-size:0.85rem;font-weight:500;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.2);animation:toastIn 0.3s ease;pointer-events:none;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis;}
     .toast.success{background:#15803d;}
     .toast.error{background:#dc2626;}
+    .toast.warning{background:#92400e;}
     @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(-10px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
     .bottom-nav{position:fixed;bottom:0;left:0;width:100%;background:rgba(255,255,255,0.94);border-top:1px solid rgba(0,0,0,0.05);display:flex;justify-content:space-around;align-items:center;padding:0.3rem 0 0.5rem;box-shadow:0 -4px 20px rgba(0,0,0,0.03);z-index:50;backdrop-filter:blur(6px);}
     .bottom-nav .nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.05rem;font-size:0.6rem;font-weight:500;color:#94a3b8;cursor:pointer;transition:0.15s;padding:0.2rem 0.6rem;border-radius:40px;background:transparent;border:none;font-family:inherit;min-width:48px;position:relative;text-decoration:none;-webkit-tap-highlight-color:transparent;}
@@ -192,6 +203,22 @@
     .bottom-nav .nav-item.active{color:#2563eb;}
     .bottom-nav .nav-item.active i{transform:scale(1.05);}
     .bottom-nav .nav-item .nav-badge{position:absolute;top:-2px;right:0px;background:#2563eb;color:white;font-size:0.5rem;border-radius:40px;padding:0.05rem 0.35rem;min-width:16px;text-align:center;font-weight:600;line-height:1.3;}
+    /* ঋণ পরিশোধ পপআপের বাকি দেখানোর কার্ড */
+    .loan-due-info{background:linear-gradient(135deg,#fef2f2,#fff1f2);border:1.5px solid #fecaca;border-radius:16px;padding:0.7rem 1rem;margin-top:0.5rem;display:flex;justify-content:space-between;align-items:center;}
+    .loan-due-info .ldi-label{font-size:0.75rem;color:#64748b;font-weight:500;}
+    .loan-due-info .ldi-amount{font-size:1.3rem;font-weight:800;color:#dc2626;letter-spacing:-0.3px;}
+    .loan-due-info .ldi-sub{font-size:0.6rem;color:#94a3b8;}
+    .loan-no-due-info{background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border:1.5px solid #bbf7d0;border-radius:16px;padding:0.7rem 1rem;margin-top:0.5rem;text-align:center;color:#15803d;font-weight:600;font-size:0.85rem;}
+    .loan-amount-error{color:#dc2626;font-size:0.7rem;font-weight:600;margin-top:0.2rem;display:none;animation:shake 0.3s ease;}
+    @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-4px);}75%{transform:translateX(4px);}}
+    /* কাস্টমার ভিউ পপআপ */
+    .view-cust-transactions{margin-top:0.8rem;max-height:200px;overflow-y:auto;}
+    .view-cust-transactions .vct-item{display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0;border-bottom:1px solid #f1f5f9;font-size:0.8rem;}
+    .view-cust-transactions .vct-item:last-child{border-bottom:none;}
+    .view-cust-transactions .vct-amount{font-weight:700;}
+    .view-cust-transactions .vct-amount.buy{color:#2563eb;}
+    .view-cust-transactions .vct-amount.sell{color:#16a34a;}
+    .view-cust-transactions .vct-amount.loan{color:#7c3aed;}
     @media(max-width:480px){
       .stock-grid{grid-template-columns:1fr 1fr;}
       .stock-item .stock-value{font-size:0.95rem;}
@@ -210,6 +237,8 @@
       .bottom-nav .nav-item i{font-size:1.1rem;}
       .bottom-nav .nav-item span{font-size:0.5rem;}
       .profile-popup{right:8px;left:8px;width:auto;}
+      .action-section{gap:0.5rem;}
+      .action-btn{padding:0.5rem 1rem;font-size:0.78rem;}
     }
     @media(max-width:380px){
       .stat-card .value{font-size:0.85rem;}
@@ -231,6 +260,7 @@
   </nav>
 
   <div class="container">
+    <!-- ====== হোম পেজ ====== -->
     <div class="page-section active" id="page-home">
       <div class="stats-grid">
         <div class="stat-card buy"><i class="fas fa-cart-shopping"></i><span class="label">Total Buy</span><span class="value" id="totalBuy">0</span><span class="sub">BDT</span></div>
@@ -265,9 +295,11 @@
         <button class="action-btn buy" id="buyBtn"><i class="fas fa-plus-circle"></i> ক্রয়</button>
         <button class="action-btn sell" id="sellBtn"><i class="fas fa-minus-circle"></i> বিক্রয়</button>
         <button class="action-btn manual-sell" id="manualSellBtn"><i class="fas fa-hand-holding-dollar"></i> সরাসরি বিক্রয়</button>
+        <button class="action-btn loan-pay" id="loanPayBtn"><i class="fas fa-hand-holding-hand"></i> ঋন পরিশোধ</button>
       </div>
     </div>
 
+    <!-- ====== ইতিহাস পেজ ====== -->
     <div class="page-section" id="page-history">
       <div class="history-list">
         <h3><i class="fas fa-clock-rotate-left"></i> লেনদেনের ইতিহাস</h3>
@@ -282,6 +314,7 @@
       </div>
     </div>
 
+    <!-- ====== বিশ্লেষণ পেজ ====== -->
     <div class="page-section" id="page-analysis">
       <div class="chart-section">
         <h3><i class="fas fa-chart-column"></i> মাসিক বিশ্লেষণ</h3>
@@ -304,6 +337,7 @@
       </div>
     </div>
 
+    <!-- ====== কাস্টমার পেজ ====== -->
     <div class="page-section" id="page-customers">
       <div class="customer-list-page">
         <h3><i class="fas fa-users"></i> কাস্টমার লিস্ট</h3>
@@ -313,6 +347,7 @@
     </div>
   </div>
 
+  <!-- বটম নেভ -->
   <nav class="bottom-nav" id="bottomNav">
     <button class="nav-item active" data-page="home"><i class="fas fa-house"></i><span>হোম</span></button>
     <button class="nav-item" data-page="history"><i class="fas fa-clock-rotate-left"></i><span>ইতিহাস</span><span class="nav-badge" id="historyBadge">0</span></button>
@@ -321,6 +356,7 @@
     <div class="profile-btn-wrap" id="profileBtnWrap"></div>
   </nav>
 
+  <!-- প্রোফাইল পপআপ -->
   <div class="profile-popup" id="profilePopup">
     <div class="prof-header">
       <div class="prof-avatar" id="profAvatar">?</div>
@@ -337,6 +373,7 @@
     <button class="logout-btn" id="logoutBtn"><i class="fas fa-right-from-bracket"></i> লগ আউট</button>
   </div>
 
+  <!-- মূল পপআপ -->
   <div class="popup-overlay" id="popupOverlay">
     <div class="popup-box" id="popupBox">
       <div class="popup-title" id="popupTitle"></div>
@@ -364,11 +401,8 @@
     const db = firebase.firestore();
 
     db.enablePersistence({ synchronizeTabs: true }).catch(function(err) {
-      if (err.code === 'failed-precondition') {
-        console.warn('পার্সিস্টেন্স ফেইল: একাধিক ট্যাব');
-      } else if (err.code === 'unimplemented') {
-        console.warn('ব্রাউজার পার্সিস্টেন্স সাপোর্ট করে না');
-      }
+      if (err.code === 'failed-precondition') console.warn('পার্সিস্টেন্স ফেইল: একাধিক ট্যাব');
+      else if (err.code === 'unimplemented') console.warn('ব্রাউজার পার্সিস্টেন্স সাপোর্ট করে না');
     });
 
     // ============================================
@@ -380,11 +414,15 @@
     let pendingDeletes = [];
     let currentPopupMode = 'buy';
     let selectedCustomerId = null;
+    let selectedCustomerName = null;
     let editingCustomerId = null;
     let paymentType = 'paid';
     let chartInstance = null;
     let currentHistoryFilter = { date: null, month: null, year: null };
     let isOnline = navigator.onLine;
+    // ঋণ পরিশোধের জন্য
+    let loanPaySelectedCustId = null;
+    let loanPaySelectedCustName = null;
 
     const $ = id => document.getElementById(id);
 
@@ -404,10 +442,9 @@
       t.className = 'toast ' + (type || '');
       t.textContent = msg;
       document.body.appendChild(t);
-      setTimeout(() => t.remove(), 2500);
+      setTimeout(() => t.remove(), 2800);
     }
 
-    // অফলাইনেও আইকন ঠিকমতো দেখানোর জন্য সিঙ্ক ইন্ডিকেটর
     function updateSyncIndicator() {
       const el = $('syncIndicator');
       if (!currentUser) {
@@ -455,12 +492,8 @@
     // ============================================
     // Firestore CRUD
     // ============================================
-    function getTxnRef() {
-      return db.collection('users').doc(currentUser.uid).collection('transactions');
-    }
-    function getCustRef() {
-      return db.collection('users').doc(currentUser.uid).collection('customers');
-    }
+    function getTxnRef() { return db.collection('users').doc(currentUser.uid).collection('transactions'); }
+    function getCustRef() { return db.collection('users').doc(currentUser.uid).collection('customers'); }
 
     async function loadFromFirestore() {
       if (!currentUser) return;
@@ -485,9 +518,7 @@
       try {
         const { id: _, ...fsData } = txn;
         await getTxnRef().doc(id).set(fsData);
-      } catch (e) {
-        console.warn('Firestore write failed (offline?)', e);
-      }
+      } catch (e) { console.warn('Firestore write failed (offline?)', e); }
       saveLocal();
       updateAllUI();
       return txn;
@@ -500,9 +531,7 @@
       try {
         const { id: _, ...fsData } = cust;
         await getCustRef().doc(id).set(fsData);
-      } catch (e) {
-        console.warn('Firestore write failed (offline?)', e);
-      }
+      } catch (e) { console.warn('Firestore write failed (offline?)', e); }
       saveLocal();
       updateAllUI();
       return cust;
@@ -518,18 +547,14 @@
 
     async function deleteTransaction(id) {
       transactions = transactions.filter(t => t.id !== id);
-      try { await getTxnRef().doc(id).delete(); } catch (e) {
-        pendingDeletes.push({ type: 'transaction', id, ts: Date.now() });
-      }
+      try { await getTxnRef().doc(id).delete(); } catch (e) { pendingDeletes.push({ type: 'transaction', id, ts: Date.now() }); }
       saveLocal();
       updateAllUI();
     }
 
     async function deleteCustomer(id) {
       customers = customers.filter(c => c.id !== id);
-      try { await getCustRef().doc(id).delete(); } catch (e) {
-        pendingDeletes.push({ type: 'customer', id, ts: Date.now() });
-      }
+      try { await getCustRef().doc(id).delete(); } catch (e) { pendingDeletes.push({ type: 'customer', id, ts: Date.now() }); }
       saveLocal();
       updateAllUI();
     }
@@ -597,8 +622,13 @@
         else if (t.type === 'sell') {
           totalSell += t.amount;
           if (t.paymentType === 'due') totalDue += t.amount;
+        } else if (t.type === 'loan_payment') {
+          // ঋণ পরিশোধ হলে বাকি থেকে কমবে
+          totalDue -= t.amount;
         }
       });
+      totalDue = Math.max(0, totalDue);
+
       const diff = totalSell - totalBuy;
       const profit = diff >= 0 ? diff : 0;
       const loss = diff < 0 ? Math.abs(diff) : 0;
@@ -652,6 +682,30 @@
       $('historyBadge').textContent = transactions.length;
     }
 
+    // কাস্টমারের মোট বাকি (loan_payment বাদ দিয়ে শুধু due টাইপের বিক্রি)
+    function getCustomerDue(name) {
+      let due = 0;
+      transactions.forEach(t => {
+        if (t.type === 'sell' && t.customerName === name && t.paymentType === 'due') due += t.amount;
+      });
+      // ঋণ পরিশোধ বাদ দেবে না, কারণ getCustomerDue শুধু due sell গুলো যোগ করে
+      return due;
+    }
+
+    // কাস্টমারের নিট বাকি (due sell - loan_payment)
+    function getCustomerNetDue(name) {
+      let due = 0;
+      transactions.forEach(t => {
+        if (t.type === 'sell' && t.customerName === name && t.paymentType === 'due') due += t.amount;
+        if (t.type === 'loan_payment' && t.customerName === name) due -= t.amount;
+      });
+      return Math.max(0, due);
+    }
+
+    function getCustomerTransactions(name) {
+      return transactions.filter(t => t.customerName === name);
+    }
+
     function renderHistory() {
       const filtered = getFilteredTransactionsForHistory();
       if (filtered.length === 0) {
@@ -661,12 +715,19 @@
       let html = '';
       [...filtered].reverse().forEach(t => {
         const dateStr = new Date(t.date).toLocaleDateString('bn-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-        const cls = t.type === 'buy' ? 'buy' : 'sell';
-        const sign = t.type === 'buy' ? '-' : '+';
+        let cls = t.type === 'buy' ? 'buy' : 'sell';
+        let sign = t.type === 'buy' ? '-' : '+';
+        let title = t.title || (t.type === 'buy' ? 'বিনিয়োগ' : 'বিক্রয়');
+        if (t.type === 'loan_payment') {
+          cls = 'loan-pay-type';
+          sign = '-';
+          title = t.title || 'ঋণ পরিশোধ';
+        }
         let info = '';
         if (t.customerName) info += ' · ' + t.customerName;
-        if (t.paymentType) info += ' · ' + (t.paymentType === 'paid' ? 'পেমেন্ট' : 'বাকি');
-        html += '<div class="history-item"><div class="h-left"><span class="h-title">' + (t.title || (t.type === 'buy' ? 'বিনিয়োগ' : 'বিক্রয়')) + '</span><span class="h-desc">' + (t.description || '') + info + ' · ' + dateStr + '</span></div><div class="h-right ' + cls + '">' + sign + ' ৳' + formatCurrency(t.amount) + '</div></div>';
+        if (t.paymentType && t.type !== 'loan_payment') info += ' · ' + (t.paymentType === 'paid' ? 'পেমেন্ট' : 'বাকি');
+        if (t.type === 'loan_payment') info += ' · পরিশোধ';
+        html += '<div class="history-item"><div class="h-left"><span class="h-title">' + title + '</span><span class="h-desc">' + (t.description || '') + info + ' · ' + dateStr + '</span></div><div class="h-right ' + cls + '">' + sign + ' ৳' + formatCurrency(t.amount) + '<button class="h-del-btn" onclick="window._deleteTxn(\'' + t.id + '\')" title="মুছুন"><i class="fas fa-xmark"></i></button></div></div>';
       });
       $('historyContainer').innerHTML = html;
     }
@@ -687,23 +748,11 @@
       }
       let html = '';
       filtered.forEach(c => {
-        const due = getCustomerDue(c.name);
+        const due = getCustomerNetDue(c.name);
         const cnt = getCustomerTransactions(c.name).length;
         html += '<div class="customer-card-item"><div class="cust-info"><div class="cust-name">' + c.name + '</div><div class="cust-details">' + (c.phone || 'N/A') + ' · ' + (c.address || 'N/A') + ' · ' + cnt + ' লেনদেন</div></div><div class="cust-due">' + (due > 0 ? '৳' + formatCurrency(due) : '✅ ০') + '</div><div class="cust-actions"><button class="view-btn" onclick="window._viewCustomer(\'' + c.id + '\')"><i class="fas fa-eye"></i> দেখুন</button><button class="edit-btn" onclick="window._editCustomer(\'' + c.id + '\')"><i class="fas fa-pen"></i> সম্পাদনা</button><button class="delete-btn" onclick="window._deleteCustomer(\'' + c.id + '\')"><i class="fas fa-trash-can"></i></button></div></div>';
       });
       $('customerListContainer').innerHTML = html;
-    }
-
-    function getCustomerDue(name) {
-      let due = 0;
-      transactions.forEach(t => {
-        if (t.type === 'sell' && t.customerName === name && t.paymentType === 'due') due += t.amount;
-      });
-      return due;
-    }
-
-    function getCustomerTransactions(name) {
-      return transactions.filter(t => t.customerName === name);
     }
 
     function getFilteredTransactionsForHistory() {
@@ -742,7 +791,7 @@
         const key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
         if (!md[key]) md[key] = { buy: 0, sell: 0, profit: 0, loss: 0 };
         if (t.type === 'buy') md[key].buy += t.amount;
-        else md[key].sell += t.amount;
+        else if (t.type === 'sell') md[key].sell += t.amount;
       });
       Object.keys(md).forEach(k => {
         const diff = md[k].sell - md[k].buy;
@@ -801,24 +850,23 @@
 
     function updateAnalysisSummary() {
       const now = new Date();
-      // গত মাস
       const lmS = new Date(now.getFullYear(), now.getMonth() - 1, 1);
       const lmE = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59);
       let lmB = 0, lmS2 = 0;
       transactions.forEach(t => {
         const d = new Date(t.date);
-        if (d >= lmS && d <= lmE) { if (t.type === 'buy') lmB += t.amount; else lmS2 += t.amount; }
+        if (d >= lmS && d <= lmE) { if (t.type === 'buy') lmB += t.amount; else if (t.type === 'sell') lmS2 += t.amount; }
       });
       const lmDiff = lmS2 - lmB;
       $('analysisLastMonth').textContent = (lmDiff >= 0 ? '+' : '-') + formatCurrency(Math.abs(lmDiff));
       $('analysisLastMonth').style.color = lmDiff >= 0 ? '#16a34a' : '#dc2626';
-      // গত বছর
+
       const lyS = new Date(now.getFullYear() - 1, 0, 1);
       const lyE = new Date(now.getFullYear() - 1, 11, 31, 23, 59, 59);
       let lyB = 0, lyS2 = 0;
       transactions.forEach(t => {
         const d = new Date(t.date);
-        if (d >= lyS && d <= lyE) { if (t.type === 'buy') lyB += t.amount; else lyS2 += t.amount; }
+        if (d >= lyS && d <= lyE) { if (t.type === 'buy') lyB += t.amount; else if (t.type === 'sell') lyS2 += t.amount; }
       });
       const lyDiff = lyS2 - lyB;
       $('analysisLastYear').textContent = (lyDiff >= 0 ? '+' : '-') + formatCurrency(Math.abs(lyDiff));
@@ -831,37 +879,148 @@
     function openPopup(mode, extraData) {
       currentPopupMode = mode;
       selectedCustomerId = null;
+      selectedCustomerName = null;
       editingCustomerId = null;
       paymentType = 'paid';
-      $('popupBox').classList.remove('login-popup-box');
+      loanPaySelectedCustId = null;
+      loanPaySelectedCustName = null;
+
+      const titleEl = $('popupTitle');
+      const fieldsEl = $('popupFields');
+      const actionsEl = $('popupActions');
+      fieldsEl.innerHTML = '';
+      actionsEl.innerHTML = '';
 
       if (mode === 'buy') {
-        $('popupTitle').innerHTML = '<i class="fas fa-cart-shopping" style="color:#2563eb"></i> ক্রয় (বিনিয়োগ)';
-        $('popupFields').innerHTML = '<label>টাকার পরিমাণ *</label><input type="number" id="pAmount" placeholder="0" min="0" inputmode="numeric"><label>বিবরণ</label><input type="text" id="pDesc" placeholder="কী কিনলেন?"><label>তারিখ</label><input type="date" id="pDate" value="' + new Date().toISOString().split('T')[0] + '">';
-        $('popupActions').innerHTML = '<button class="btn-cancel" onclick="closePopup()">বাতিল</button><button class="btn-confirm" onclick="handleBuy()">সংরক্ষণ</button>';
+        titleEl.innerHTML = '<i class="fas fa-cart-shopping" style="color:#2563eb"></i> নতুন ক্রয়';
+        fieldsEl.innerHTML =
+          '<label>তারিখ</label><input type="date" id="popupDate" value="' + new Date().toISOString().split('T')[0] + '">' +
+          '<label>বিবরণ</label><input type="text" id="popupDesc" placeholder="ক্রয়ের বিবরণ লিখুন...">' +
+          '<label>পরিমাণ (BDT)</label><input type="number" id="popupAmount" placeholder="0" min="0" inputmode="numeric">';
+        actionsEl.innerHTML = '<button class="btn-cancel" onclick="closePopup()">বাতিল</button><button class="btn-confirm" onclick="handleBuySubmit()">ক্রয় সম্পন্ন</button>';
 
       } else if (mode === 'sell') {
-        $('popupTitle').innerHTML = '<i class="fas fa-cash-register" style="color:#16a34a"></i> বিক্রয় (স্টক থেকে)';
-        $('popupFields').innerHTML = '<label>কাস্টমার সিলেক্ট করুন *</label><div class="cust-search-wrap"><input type="text" id="pCustSearch" placeholder="নাম বা ফোন লিখে খুঁজুন..." autocomplete="off"><div class="cust-dropdown" id="pCustDropdown"></div></div><input type="hidden" id="pCustId" value=""><input type="hidden" id="pCustName" value=""><label>টাকার পরিমাণ *</label><input type="number" id="pAmount" placeholder="0" min="0" inputmode="numeric"><label>পেমেন্ট টাইপ</label><div class="payment-type-group"><button class="paid active" onclick="setPaymentType(\'paid\',this)">✅ পেইড</button><button class="due" onclick="setPaymentType(\'due\',this)">⏳ বাকি</button></div><label>বিবরণ</label><input type="text" id="pDesc" placeholder="কী বিক্রি করলেন?"><label>তারিখ</label><input type="date" id="pDate" value="' + new Date().toISOString().split('T')[0] + '">';
-        $('popupActions').innerHTML = '<button class="btn-cancel" onclick="closePopup()">বাতিল</button><button class="btn-confirm" onclick="handleSell()" style="background:#16a34a">বিক্রয় সংরক্ষণ</button>';
-        setTimeout(() => setupCustSearchInPopup(), 50);
+        titleEl.innerHTML = '<i class="fas fa-cash-register" style="color:#16a34a"></i> স্টক বিক্রয়';
+        fieldsEl.innerHTML =
+          '<label>তারিখ</label><input type="date" id="popupDate" value="' + new Date().toISOString().split('T')[0] + '">' +
+          '<label>কাস্টমার খুঁজুন</label>' +
+          '<div class="cust-search-wrap">' +
+            '<input type="text" id="popupCustSearch" placeholder="নাম বা নম্বর লিখুন..." autocomplete="off">' +
+            '<div class="cust-dropdown" id="popupCustDropdown"></div>' +
+          '</div>' +
+          '<div id="newCustFields" style="display:none">' +
+            '<label>নতুন কাস্টমারের নাম</label><input type="text" id="popupNewCustName" placeholder="নাম">' +
+            '<label>ফোন নম্বর</label><input type="tel" id="popupNewCustPhone" placeholder="01XXXXXXXXX">' +
+            '<label>ঠিকানা</label><input type="text" id="popupNewCustAddr" placeholder="ঠিকানা">' +
+          '</div>' +
+          '<label>পেমেন্ট টাইপ</label>' +
+          '<div class="payment-type-group" id="paymentTypeGroup">' +
+            '<button class="paid active" data-type="paid" onclick="setPaymentType(\'paid\')"><i class="fas fa-check-circle"></i> পেমেন্ট</button>' +
+            '<button class="due" data-type="due" onclick="setPaymentType(\'due\')"><i class="fas fa-clock"></i> বাকি</button>' +
+          '</div>' +
+          '<label>পরিমাণ (BDT)</label><input type="number" id="popupAmount" placeholder="0" min="0" inputmode="numeric">' +
+          '<label>বিবরণ</label><input type="text" id="popupDesc" placeholder="বিক্রয়ের বিবরণ...">';
+        actionsEl.innerHTML = '<button class="btn-cancel" onclick="closePopup()">বাতিল</button><button class="btn-confirm" style="background:#16a34a" onclick="handleSellSubmit()">বিক্রয় সম্পন্ন</button>';
+        // সার্চ ইভেন্ট
+        setTimeout(() => setupCustSearch('popupCustSearch', 'popupCustDropdown', 'newCustFields'), 50);
 
       } else if (mode === 'manual_sell') {
-        // ★ সরাসরি বিক্রয় - শুধু টাইটেল + টাকা
-        $('popupTitle').innerHTML = '<i class="fas fa-hand-holding-dollar" style="color:#92400e"></i> সরাসরি বিক্রয়';
-        $('popupFields').innerHTML = '<label>বিবরণ / কারণ *</label><input type="text" id="pManualTitle" placeholder="যেমন: নগদ বিক্রি, প্রাইভেট অর্ডার..."><label>টাকার পরিমাণ *</label><input type="number" id="pAmount" placeholder="0" min="0" inputmode="numeric">';
-        $('popupActions').innerHTML = '<button class="btn-cancel" onclick="closePopup()">বাতিল</button><button class="btn-confirm" onclick="handleManualSell()" style="background:#92400e">সংরক্ষণ</button>';
+        titleEl.innerHTML = '<i class="fas fa-hand-holding-dollar" style="color:#92400e"></i> সরাসরি বিক্রয়';
+        fieldsEl.innerHTML =
+          '<label>তারিখ</label><input type="date" id="popupDate" value="' + new Date().toISOString().split('T')[0] + '">' +
+          '<label>কাস্টমার খুঁজুন</label>' +
+          '<div class="cust-search-wrap">' +
+            '<input type="text" id="popupCustSearch" placeholder="নাম বা নম্বর লিখুন..." autocomplete="off">' +
+            '<div class="cust-dropdown" id="popupCustDropdown"></div>' +
+          '</div>' +
+          '<div id="newCustFields" style="display:none">' +
+            '<label>নতুন কাস্টমারের নাম</label><input type="text" id="popupNewCustName" placeholder="নাম">' +
+            '<label>ফোন নম্বর</label><input type="tel" id="popupNewCustPhone" placeholder="01XXXXXXXXX">' +
+            '<label>ঠিকানা</label><input type="text" id="popupNewCustAddr" placeholder="ঠিকানা">' +
+          '</div>' +
+          '<label>পেমেন্ট টাইপ</label>' +
+          '<div class="payment-type-group" id="paymentTypeGroup">' +
+            '<button class="paid active" data-type="paid" onclick="setPaymentType(\'paid\')"><i class="fas fa-check-circle"></i> পেমেন্ট</button>' +
+            '<button class="due" data-type="due" onclick="setPaymentType(\'due\')"><i class="fas fa-clock"></i> বাকি</button>' +
+          '</div>' +
+          '<label>পরিমাণ (BDT)</label><input type="number" id="popupAmount" placeholder="0" min="0" inputmode="numeric">' +
+          '<label>বিবরণ</label><input type="text" id="popupDesc" placeholder="বিক্রয়ের বিবরণ...">';
+        actionsEl.innerHTML = '<button class="btn-cancel" onclick="closePopup()">বাতিল</button><button class="btn-confirm" style="background:#92400e" onclick="handleManualSellSubmit()">বিক্রয় সম্পন্ন</button>';
+        setTimeout(() => setupCustSearch('popupCustSearch', 'popupCustDropdown', 'newCustFields'), 50);
 
-      } else if (mode === 'customer_view') {
-        renderCustomerViewPopup(extraData);
-        return;
-      } else if (mode === 'customer_edit') {
-        renderCustomerEditPopup(extraData);
-        return;
-      } else if (mode === 'customer_add') {
-        $('popupTitle').innerHTML = '<i class="fas fa-user-plus" style="color:#2563eb"></i> নতুন কাস্টমার';
-        $('popupFields').innerHTML = '<label>নাম *</label><input type="text" id="pCustNameInput" placeholder="কাস্টমারের নাম"><label>ফোন নম্বর</label><input type="text" id="pCustPhone" placeholder="01XXXXXXXXX" inputmode="tel"><label>ঠিকানা</label><input type="text" id="pCustAddress" placeholder="ঠিকানা">';
-        $('popupActions').innerHTML = '<button class="btn-cancel" onclick="closePopup()">বাতিল</button><button class="btn-confirm" onclick="handleAddCustomer()">যোগ করুন</button>';
+      } else if (mode === 'loan_pay') {
+        // ====== ঋণ পরিশোধ পপআপ ======
+        titleEl.innerHTML = '<i class="fas fa-hand-holding-hand" style="color:#7c3aed"></i> ঋণ পরিশোধ';
+        fieldsEl.innerHTML =
+          '<label>কাস্টমার খুঁজুন (শুধুমাত্র যাদের বাকি আছে)</label>' +
+          '<div class="cust-search-wrap">' +
+            '<input type="text" id="loanCustSearch" placeholder="নাম বা নম্বর লিখুন..." autocomplete="off">' +
+            '<div class="cust-dropdown" id="loanCustDropdown"></div>' +
+          '</div>' +
+          '<div id="loanDueInfoBox"></div>' +
+          '<label id="loanAmountLabel" style="display:none">পরিশোধের পরিমাণ (BDT)</label>' +
+          '<input type="number" id="loanPayAmount" placeholder="0" min="0" inputmode="numeric" style="display:none">' +
+          '<div class="loan-amount-error" id="loanAmountError"></div>' +
+          '<label id="loanDescLabel" style="display:none">বিবরণ (ঐচ্ছিক)</label>' +
+          '<input type="text" id="loanPayDesc" placeholder="পরিশোধের বিবরণ..." style="display:none">';
+        actionsEl.innerHTML = '<button class="btn-cancel" onclick="closePopup()">বাতিল</button><button class="btn-loan-pay" id="loanPayConfirmBtn" onclick="handleLoanPaySubmit()" style="opacity:0.5;pointer-events:none;">পরিশোধ সম্পন্ন</button>';
+        setTimeout(() => setupLoanCustSearch(), 50);
+
+      } else if (mode === 'view_customer') {
+        const c = extraData;
+        titleEl.innerHTML = '<i class="fas fa-user" style="color:#2563eb"></i> ' + c.name;
+        const due = getCustomerNetDue(c.name);
+        const txns = getCustomerTransactions(c.name);
+        let txnHtml = '';
+        if (txns.length === 0) {
+          txnHtml = '<div style="text-align:center;color:#94a3b8;padding:1rem 0;font-size:0.85rem;">কোনো লেনদেন নেই</div>';
+        } else {
+          txnHtml = '<div class="view-cust-transactions">';
+          [...txns].reverse().forEach(t => {
+            const dateStr = new Date(t.date).toLocaleDateString('bn-IN', { day: 'numeric', month: 'short' });
+            let cls = t.type === 'buy' ? 'buy' : 'sell';
+            let sign = t.type === 'buy' ? '-' : '+';
+            let tTitle = t.title || (t.type === 'buy' ? 'বিনিয়োগ' : 'বিক্রয়');
+            if (t.type === 'loan_payment') { cls = 'loan'; sign = '-'; tTitle = 'ঋণ পরিশোধ'; }
+            txnHtml += '<div class="vct-item"><span style="color:#64748b;font-size:0.75rem">' + dateStr + ' · ' + tTitle + '</span><span class="vct-amount ' + cls + '">' + sign + ' ৳' + formatCurrency(t.amount) + '</span></div>';
+          });
+          txnHtml += '</div>';
+        }
+        fieldsEl.innerHTML =
+          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.5rem;">' +
+            '<div style="background:#f8fafc;border-radius:12px;padding:0.5rem;text-align:center;"><div style="font-size:0.6rem;color:#64748b;text-transform:uppercase">ফোন</div><div style="font-weight:600;color:#0b1a33;font-size:0.85rem">' + (c.phone || 'N/A') + '</div></div>' +
+            '<div style="background:#f8fafc;border-radius:12px;padding:0.5rem;text-align:center;"><div style="font-size:0.6rem;color:#64748b;text-transform:uppercase">ঠিকানা</div><div style="font-weight:600;color:#0b1a33;font-size:0.85rem">' + (c.address || 'N/A') + '</div></div>' +
+            '<div style="background:#f8fafc;border-radius:12px;padding:0.5rem;text-align:center;"><div style="font-size:0.6rem;color:#64748b;text-transform:uppercase">মোট লেনদেন</div><div style="font-weight:600;color:#0b1a33;font-size:0.85rem">' + txns.length + '</div></div>' +
+            '<div style="background:' + (due > 0 ? '#fef2f2' : '#f0fdf4') + ';border-radius:12px;padding:0.5rem;text-align:center;"><div style="font-size:0.6rem;color:#64748b;text-transform:uppercase">বাকি</div><div style="font-weight:700;color:' + (due > 0 ? '#dc2626' : '#16a34a') + ';font-size:0.85rem">৳' + formatCurrency(due) + '</div></div>' +
+          '</div>' +
+          '<label style="margin-top:0.3rem">লেনদেনের তালিকা</label>' + txnHtml;
+        actionsEl.innerHTML = '<button class="btn-cancel" onclick="closePopup()">বন্ধ করুন</button>';
+
+      } else if (mode === 'edit_customer') {
+        editingCustomerId = extraData.id;
+        const c = extraData;
+        titleEl.innerHTML = '<i class="fas fa-pen" style="color:#92400e"></i> কাস্টমার সম্পাদনা';
+        fieldsEl.innerHTML =
+          '<label>নাম</label><input type="text" id="editCustName" value="' + c.name + '">' +
+          '<label>ফোন নম্বর</label><input type="tel" id="editCustPhone" value="' + (c.phone || '') + '">' +
+          '<label>ঠিকানা</label><input type="text" id="editCustAddr" value="' + (c.address || '') + '">';
+        actionsEl.innerHTML = '<button class="btn-cancel" onclick="closePopup()">বাতিল</button><button class="btn-confirm" style="background:#92400e" onclick="handleEditCustSubmit()">আপডেট</button>';
+
+      } else if (mode === 'delete_customer') {
+        editingCustomerId = extraData.id;
+        const c = extraData;
+        const due = getCustomerNetDue(c.name);
+        titleEl.innerHTML = '<i class="fas fa-trash-can" style="color:#dc2626"></i> কাস্টমার মুছুন';
+        let warn = '';
+        if (due > 0) warn = '<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:0.6rem 1rem;margin-top:0.5rem;color:#991b1b;font-size:0.85rem;font-weight:600;"><i class="fas fa-triangle-exclamation"></i> সতর্কতা: এই কাস্টমারের ৳' + formatCurrency(due) + ' বাকি আছে!</div>';
+        fieldsEl.innerHTML = '<p style="color:#334155;font-size:0.9rem;">আপনি কি <strong>' + c.name + '</strong> কে মুছে ফেলতে চান? এই কাজ ফিরিয়ে আনা যাবে না।</p>' + warn;
+        actionsEl.innerHTML = '<button class="btn-cancel" onclick="closePopup()">বাতিল</button><button class="btn-danger" onclick="handleDeleteCustSubmit()">মুছে ফেলুন</button>';
+
+      } else if (mode === 'delete_transaction') {
+        titleEl.innerHTML = '<i class="fas fa-trash-can" style="color:#dc2626"></i> লেনদেন মুছুন';
+        fieldsEl.innerHTML = '<p style="color:#334155;font-size:0.9rem;">আপনি কি এই লেনদেনটি মুছে ফেলতে চান?</p>';
+        actionsEl.innerHTML = '<button class="btn-cancel" onclick="closePopup()">বাতিল</button><button class="btn-danger" onclick="handleDeleteTxnSubmit()">মুছে ফেলুন</button>';
+        editingCustomerId = extraData; // এখানে txn id রাখছি
       }
 
       $('popupOverlay').classList.add('active');
@@ -869,478 +1028,588 @@
 
     function closePopup() {
       $('popupOverlay').classList.remove('active');
-      const dd = document.getElementById('pCustDropdown');
-      if (dd) dd.classList.remove('show');
+      currentPopupMode = '';
     }
 
+    // পপআপের বাইরে ক্লিক করলে বন্ধ
+    $('popupOverlay').addEventListener('click', function(e) {
+      if (e.target === this) closePopup();
+    });
+
     // ============================================
-    // কাস্টমার সার্চ (পপআপে) - সম্পূর্ণ ফিক্সড
+    // কাস্টমার সার্চ (ক্রয়/বিক্রয় পপআপে)
     // ============================================
-    function setupCustSearchInPopup() {
-      const searchInput = document.getElementById('pCustSearch');
-      const dropdown = document.getElementById('pCustDropdown');
-      if (!searchInput || !dropdown) return;
+    function setupCustSearch(inputId, dropdownId, newFieldsId) {
+      const input = $(inputId);
+      const dropdown = $(dropdownId);
+      if (!input || !dropdown) return;
 
-      // পুরনো ইভেন্ট রিমুভ করে নতুন করি (ডুপ্লিকেট প্রতিরোধ)
-      const newSearch = searchInput.cloneNode(true);
-      searchInput.parentNode.replaceChild(newSearch, searchInput);
-
-      // ফোকাসে সব কাস্টমার দেখাও
-      newSearch.addEventListener('focus', function () {
-        renderCustDropdown(this.value);
-      });
-
-      // ইনপুটে ফিল্টার
-      newSearch.addEventListener('input', function (e) {
-        e.stopPropagation();
-        renderCustDropdown(this.value);
-        document.getElementById('pCustId').value = '';
-        document.getElementById('pCustName').value = '';
+      input.addEventListener('input', function() {
+        const q = this.value.toLowerCase().trim();
         selectedCustomerId = null;
-      });
+        selectedCustomerName = null;
 
-      // কীডাউনে নেভিগেশন
-      newSearch.addEventListener('keydown', function (e) {
-        const items = dropdown.querySelectorAll('.cust-drop-item');
-        if (!items.length) return;
-        let active = dropdown.querySelector('.cust-drop-item.hovered');
-        if (e.key === 'ArrowDown') {
-          e.preventDefault();
-          if (active) active.classList.remove('hovered');
-          active = items[[...items].indexOf(active) + 1] || items[0];
-          active.classList.add('hovered');
-          active.scrollIntoView({ block: 'nearest' });
-        } else if (e.key === 'ArrowUp') {
-          e.preventDefault();
-          if (active) active.classList.remove('hovered');
-          active = items[[...items].indexOf(active) - 1] || items[items.length - 1];
-          active.classList.add('hovered');
-          active.scrollIntoView({ block: 'nearest' });
-        } else if (e.key === 'Enter') {
-          e.preventDefault();
-          if (active) active.click();
-        } else if (e.key === 'Escape') {
+        if (q.length === 0) {
           dropdown.classList.remove('show');
+          dropdown.innerHTML = '';
+          return;
         }
+
+        const results = customers.filter(c =>
+          c.name.toLowerCase().includes(q) ||
+          (c.phone && c.phone.includes(q))
+        ).slice(0, 10);
+
+        if (results.length === 0) {
+          dropdown.innerHTML = '<div style="padding:0.6rem 1rem;color:#94a3b8;font-size:0.85rem;cursor:pointer;" onclick="showNewCustFields(\'' + newFieldsId + '\')"><i class="fas fa-plus-circle" style="color:#2563eb"></i> নতুন কাস্টমার যোগ করুন</div>';
+          dropdown.classList.add('show');
+          if ($(newFieldsId)) $(newFieldsId).style.display = 'none';
+          return;
+        }
+
+        let html = '';
+        results.forEach(c => {
+          html += '<div class="cust-drop-item" data-id="' + c.id + '" data-name="' + c.name + '" onclick="selectCustFromDrop(this,\'' + inputId + '\',\'' + newFieldsId + '\')">' +
+            '<span>' + c.name + ' <span class="cust-drop-phone">' + (c.phone || '') + '</span></span></div>';
+        });
+        html += '<div style="padding:0.5rem 1rem;color:#94a3b8;font-size:0.75rem;cursor:pointer;border-top:1px solid #f1f5f9;" onclick="showNewCustFields(\'' + newFieldsId + '\')"><i class="fas fa-plus-circle" style="color:#2563eb"></i> নতুন কাস্টমার যোগ করুন</div>';
+        dropdown.innerHTML = html;
+        dropdown.classList.add('show');
       });
 
-      // বাইরে ক্লিকে ড্রপডাউন বন্ধ
-      document.addEventListener('click', function handler(e) {
-        if (!e.target.closest('.cust-search-wrap')) {
-          dropdown.classList.remove('show');
+      input.addEventListener('focus', function() {
+        if (this.value.length > 0) {
+          this.dispatchEvent(new Event('input'));
         }
       });
     }
 
-    function renderCustDropdown(query) {
-      const dropdown = document.getElementById('pCustDropdown');
-      if (!dropdown) return;
-      const q = (query || '').toLowerCase().trim();
-      let filtered = customers;
-      if (q) {
-        filtered = customers.filter(c =>
-          c.name.toLowerCase().includes(q) ||
-          (c.phone && c.phone.includes(q)) ||
-          (c.address && c.address.toLowerCase().includes(q))
-        );
+    window.selectCustFromDrop = function(el, inputId, newFieldsId) {
+      selectedCustomerId = el.dataset.id;
+      selectedCustomerName = el.dataset.name;
+      $(inputId).value = selectedCustomerName;
+      $(inputId).nextElementSibling.classList.remove('show');
+      if ($(newFieldsId)) $(newFieldsId).style.display = 'none';
+    };
+
+    window.showNewCustFields = function(newFieldsId) {
+      if ($(newFieldsId)) $(newFieldsId).style.display = 'block';
+      // ড্রপডাউন বন্ধ
+      const dd = document.querySelector('.cust-dropdown.show');
+      if (dd) dd.classList.remove('show');
+    };
+
+    // ============================================
+    // ঋণ পরিশোধ কাস্টমার সার্চ (শুধুমাত্র যাদের বাকি আছে)
+    // ============================================
+    function setupLoanCustSearch() {
+      const input = $('loanCustSearch');
+      const dropdown = $('loanCustDropdown');
+      if (!input || !dropdown) return;
+
+      input.addEventListener('input', function() {
+        const q = this.value.toLowerCase().trim();
+        loanPaySelectedCustId = null;
+        loanPaySelectedCustName = null;
+
+        // বাকি ইনফো ও এমাউন্ট ফিল্ড লুকানো
+        $('loanDueInfoBox').innerHTML = '';
+        $('loanAmountLabel').style.display = 'none';
+        $('loanPayAmount').style.display = 'none';
+        $('loanDescLabel').style.display = 'none';
+        $('loanPayDesc').style.display = 'none';
+        $('loanAmountError').style.display = 'none';
+        disableLoanConfirmBtn();
+
+        if (q.length === 0) {
+          dropdown.classList.remove('show');
+          dropdown.innerHTML = '';
+          return;
+        }
+
+        // শুধুমাত্র যাদের বাকি আছে তাদের ফিল্টার
+        const results = customers.filter(c => {
+          const netDue = getCustomerNetDue(c.name);
+          return netDue > 0 && (
+            c.name.toLowerCase().includes(q) ||
+            (c.phone && c.phone.includes(q))
+          );
+        }).slice(0, 10);
+
+        if (results.length === 0) {
+          dropdown.innerHTML = '<div style="padding:0.6rem 1rem;color:#94a3b8;font-size:0.85rem;"><i class="fas fa-info-circle"></i> কোনো কাস্টমার পাওয়া যায়নি যার বাকি আছে</div>';
+          dropdown.classList.add('show');
+          return;
+        }
+
+        let html = '';
+        results.forEach(c => {
+          const due = getCustomerNetDue(c.name);
+          html += '<div class="cust-drop-item" data-id="' + c.id + '" data-name="' + c.name + '" onclick="selectLoanCust(this)">' +
+            '<span>' + c.name + ' <span class="cust-drop-phone">' + (c.phone || '') + '</span></span>' +
+            '<span class="cust-drop-due">৳' + formatCurrency(due) + '</span>' +
+          '</div>';
+        });
+        dropdown.innerHTML = html;
+        dropdown.classList.add('show');
+      });
+
+      input.addEventListener('focus', function() {
+        if (this.value.length > 0) {
+          this.dispatchEvent(new Event('input'));
+        }
+      });
+    }
+
+    window.selectLoanCust = function(el) {
+      loanPaySelectedCustId = el.dataset.id;
+      loanPaySelectedCustName = el.dataset.name;
+      $('loanCustSearch').value = loanPaySelectedCustName;
+      $('loanCustDropdown').classList.remove('show');
+
+      // বাকি দেখানো
+      const netDue = getCustomerNetDue(loanPaySelectedCustName);
+      $('loanDueInfoBox').innerHTML =
+        '<div class="loan-due-info">' +
+          '<div><div class="ldi-label">বাকি পরিমাণ</div><div class="ldi-sub">' + loanPaySelectedCustName + '</div></div>' +
+          '<div style="text-align:right"><div class="ldi-amount">৳' + formatCurrency(netDue) + '</div></div>' +
+        '</div>';
+
+      // এমাউন্ট ফিল্ড দেখানো
+      $('loanAmountLabel').style.display = 'block';
+      $('loanPayAmount').style.display = 'block';
+      $('loanDescLabel').style.display = 'block';
+      $('loanPayDesc').style.display = 'block';
+      $('loanPayAmount').value = '';
+      $('loanPayAmount').max = netDue;
+      $('loanPayAmount').setAttribute('data-max-due', netDue);
+      $('loanAmountError').style.display = 'none';
+      enableLoanConfirmBtn();
+    };
+
+    function disableLoanConfirmBtn() {
+      const btn = $('loanPayConfirmBtn');
+      btn.style.opacity = '0.5';
+      btn.style.pointerEvents = 'none';
+    }
+
+    function enableLoanConfirmBtn() {
+      const btn = $('loanPayConfirmBtn');
+      btn.style.opacity = '1';
+      btn.style.pointerEvents = 'auto';
+    }
+
+    // এমাউন্ট ইনপুটে রিয়েল-টাইম ভ্যালিডেশন
+    document.addEventListener('input', function(e) {
+      if (e.target.id === 'loanPayAmount') {
+        const val = parseFloat(e.target.value) || 0;
+        const maxDue = parseFloat(e.target.getAttribute('data-max-due')) || 0;
+        const errEl = $('loanAmountError');
+
+        if (val > maxDue && maxDue > 0) {
+          errEl.textContent = 'পরিশোধের পরিমাণ বাকি (৳' + formatCurrency(maxDue) + ') এর বেশি হতে পারবে না!';
+          errEl.style.display = 'block';
+        } else if (val <= 0 && e.target.value !== '') {
+          errEl.textContent = 'পরিমাণ শূন্য বা ঋণাত্মক হতে পারবে না';
+          errEl.style.display = 'block';
+        } else {
+          errEl.style.display = 'none';
+        }
+      }
+    });
+
+    // ============================================
+    // পেমেন্ট টাইপ
+    // ============================================
+    function setPaymentType(type) {
+      paymentType = type;
+      document.querySelectorAll('#paymentTypeGroup button').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.type === type) btn.classList.add('active');
+      });
+    }
+
+    // ============================================
+    // ফর্ম সাবমিট হ্যান্ডলার
+    // ============================================
+    function handleBuySubmit() {
+      const date = $('popupDate').value;
+      const desc = $('popupDesc').value.trim();
+      const amount = parseFloat($('popupAmount').value);
+
+      if (!date) { showToast('তারিখ নির্বাচন করুন', 'error'); return; }
+      if (!amount || amount <= 0) { showToast('সঠিক পরিমাণ দিন', 'error'); return; }
+
+      addTransaction({
+        type: 'buy',
+        date: date,
+        description: desc,
+        amount: amount,
+        title: desc || 'বিনিয়োগ',
+        customerName: '',
+        paymentType: 'paid',
+        createdAt: Date.now()
+      });
+      showToast('ক্রয় সফলভাবে সম্পন্ন!', 'success');
+      closePopup();
+    }
+
+    function handleSellSubmit() {
+      const date = $('popupDate').value;
+      const desc = $('popupDesc').value.trim();
+      const amount = parseFloat($('popupAmount').value);
+
+      if (!date) { showToast('তারিখ নির্বাচন করুন', 'error'); return; }
+      if (!amount || amount <= 0) { showToast('সঠিক পরিমাণ দিন', 'error'); return; }
+
+      let custName = selectedCustomerName;
+
+      // নতুন কাস্টমার যদি থাকে
+      if (!custName) {
+        const newName = $('popupNewCustName') ? $('popupNewCustName').value.trim() : '';
+        if (!newName) { showToast('কাস্টমার নির্বাচন করুন বা নতুন তৈরি করুন', 'error'); return; }
+        const phone = $('popupNewCustPhone') ? $('popupNewCustPhone').value.trim() : '';
+        const addr = $('popupNewCustAddr') ? $('popupNewCustAddr').value.trim() : '';
+        addCustomer({ name: newName, phone: phone, address: addr, createdAt: Date.now() });
+        custName = newName;
       }
 
-      if (filtered.length === 0) {
-        dropdown.innerHTML = '<div style="padding:0.8rem;text-align:center;color:#94a3b8;font-size:0.85rem;">কাস্টমার পাওয়া যায়নি। <span style="color:#2563eb;cursor:pointer;text-decoration:underline;" onclick="closePopup();openPopup(\'customer_add\')">নতুন যোগ করুন</span></div>';
-        dropdown.classList.add('show');
+      addTransaction({
+        type: 'sell',
+        date: date,
+        description: desc,
+        amount: amount,
+        title: desc || 'বিক্রয়',
+        customerName: custName,
+        paymentType: paymentType,
+        createdAt: Date.now()
+      });
+      showToast('বিক্রয় সফলভাবে সম্পন্ন!', 'success');
+      closePopup();
+    }
+
+    function handleManualSellSubmit() {
+      const date = $('popupDate').value;
+      const desc = $('popupDesc').value.trim();
+      const amount = parseFloat($('popupAmount').value);
+
+      if (!date) { showToast('তারিখ নির্বাচন করুন', 'error'); return; }
+      if (!amount || amount <= 0) { showToast('সঠিক পরিমাণ দিন', 'error'); return; }
+
+      let custName = selectedCustomerName;
+
+      if (!custName) {
+        const newName = $('popupNewCustName') ? $('popupNewCustName').value.trim() : '';
+        if (!newName) { showToast('কাস্টমার নির্বাচন করুন বা নতুন তৈরি করুন', 'error'); return; }
+        const phone = $('popupNewCustPhone') ? $('popupNewCustPhone').value.trim() : '';
+        const addr = $('popupNewCustAddr') ? $('popupNewCustAddr').value.trim() : '';
+        addCustomer({ name: newName, phone: phone, address: addr, createdAt: Date.now() });
+        custName = newName;
+      }
+
+      addTransaction({
+        type: 'sell',
+        date: date,
+        description: desc,
+        amount: amount,
+        title: desc || 'সরাসরি বিক্রয়',
+        customerName: custName,
+        paymentType: paymentType,
+        isManualSell: true,
+        createdAt: Date.now()
+      });
+      showToast('সরাসরি বিক্রয় সফল!', 'success');
+      closePopup();
+    }
+
+    // ====== ঋণ পরিশোধ সাবমিট ======
+    function handleLoanPaySubmit() {
+      if (!loanPaySelectedCustName) {
+        showToast('কাস্টমার নির্বাচন করুন', 'error');
         return;
       }
 
-      let html = '';
-      filtered.forEach(c => {
-        const due = getCustomerDue(c.name);
-        html += '<div class="cust-drop-item" data-id="' + c.id + '" data-name="' + c.name.replace(/"/g, '&quot;') + '" onclick="selectCustFromDropdown(this)">' +
-          '<span><strong>' + c.name + '</strong></span>' +
-          '<span class="cust-drop-phone">' + (c.phone || '') + (due > 0 ? ' · বাকি: ৳' + formatCurrency(due) : '') + '</span></div>';
+      const amount = parseFloat($('loanPayAmount').value) || 0;
+      const maxDue = parseFloat($('loanPayAmount').getAttribute('data-max-due')) || 0;
+      const desc = $('loanPayDesc').value.trim();
+
+      // ভ্যালিডেশন: পরিমাণ শূন্য বা ঋণাত্মক
+      if (amount <= 0) {
+        showToast('পরিমাণ শূন্য বা ঋণাত্মক হতে পারবে না', 'error');
+        $('loanAmountError').textContent = 'পরিমাণ শূন্য বা ঋণাত্মক হতে পারবে না';
+        $('loanAmountError').style.display = 'block';
+        return;
+      }
+
+      // ভ্যালিডেশন: বাকির চেয়ে বেশি
+      if (amount > maxDue) {
+        showToast('পরিশোধের পরিমাণ বাকির চেয়ে বেশি হতে পারবে না! বাকি: ৳' + formatCurrency(maxDue), 'error');
+        $('loanAmountError').textContent = 'পরিশোধের পরিমাণ বাকি (৳' + formatCurrency(maxDue) + ') এর বেশি হতে পারবে না!';
+        $('loanAmountError').style.display = 'block';
+        return;
+      }
+
+      // লেনদেন যোগ করা (type: loan_payment)
+      addTransaction({
+        type: 'loan_payment',
+        date: new Date().toISOString().split('T')[0],
+        description: desc || 'ঋণ পরিশোধ',
+        amount: amount,
+        title: 'ঋণ পরিশোধ',
+        customerName: loanPaySelectedCustName,
+        paymentType: 'loan_payment',
+        createdAt: Date.now()
       });
-      dropdown.innerHTML = html;
-      dropdown.classList.add('show');
-    }
 
-    function selectCustFromDropdown(el) {
-      const id = el.getAttribute('data-id');
-      const name = el.getAttribute('data-name');
-      selectedCustomerId = id;
-
-      const searchInput = document.getElementById('pCustSearch');
-      const dropdown = document.getElementById('pCustDropdown');
-
-      if (searchInput) searchInput.value = name;
-      const cidEl = document.getElementById('pCustId');
-      const cnameEl = document.getElementById('pCustName');
-      if (cidEl) cidEl.value = id;
-      if (cnameEl) cnameEl.value = name;
-
-      dropdown.querySelectorAll('.cust-drop-item').forEach(i => i.classList.remove('selected', 'hovered'));
-      el.classList.add('selected');
-      setTimeout(() => dropdown.classList.remove('show'), 150);
-    }
-
-    function setPaymentType(type, btn) {
-      paymentType = type;
-      btn.closest('.payment-type-group').querySelectorAll('button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-    }
-
-    // ============================================
-    // হ্যান্ডলার
-    // ============================================
-    async function handleBuy() {
-  const amount = parseFloat($('pAmount').value);
-  if (!amount || amount <= 0) { showToast('টাকার পরিমাণ দিন', 'error'); return; }
-  
-  // ট্রানজেকশন যোগ করুন
-  addTransaction({
-    type: 'buy',
-    amount,
-    description: $('pDesc').value.trim(),
-    title: 'বিনিয়োগ',
-    date: $('pDate').value || new Date().toISOString().split('T')[0],
-    customerName: '',
-    paymentType: ''
-  });
-  
-  closePopup();
-  showToast('ক্রয় সংরক্ষিত হয়েছে', 'success');
-  
-  // সম্পূর্ণ প্রজেক্ট রিলোড করুন
-  setTimeout(() => {
-    window.location.reload();
-  }, 300);
-}
-
-    async function handleSell() {
-  const custName = document.getElementById('pCustName') ? document.getElementById('pCustName').value : '';
-  const amount = parseFloat($('pAmount').value);
-  if (!custName) { showToast('কাস্টমার সিলেক্ট করুন', 'error'); return; }
-  if (!amount || amount <= 0) { showToast('টাকার পরিমাণ দিন', 'error'); return; }
-  
-  addTransaction({
-    type: 'sell',
-    amount,
-    description: $('pDesc').value.trim(),
-    title: 'বিক্রয়',
-    date: $('pDate').value || new Date().toISOString().split('T')[0],
-    customerName: custName,
-    customerId: document.getElementById('pCustId').value,
-    paymentType: paymentType
-  });
-  
-  closePopup();
-  showToast('বিক্রয় সংরক্ষিত হয়েছে', 'success');
-  
-  // ডাটা রিলোড ইভেন্ট ট্রিগার করুন
-  document.dispatchEvent(new CustomEvent('dataReload'));
-  
-  // অথবা সরাসরি রিলোড
-  setTimeout(() => {
-    location.reload();
-  }, 500); // টোস্ট দেখানোর জন্য সামান্য দেরি
-}
-
-    // ★ সরাসরি বিক্রয় হ্যান্ডলার - শুধু টাইটেল + টাকা
-    async function handleManualSell() {
-  const title = $('pManualTitle').value.trim();
-  const amount = parseFloat($('pAmount').value);
-  if (!title) { showToast('বিবরণ দিন', 'error'); return; }
-  if (!amount || amount <= 0) { showToast('টাকার পরিমাণ দিন', 'error'); return; }
-  
-  // ট্রানজেকশন যোগ করুন
-  addTransaction({
-    type: 'sell',
-    amount,
-    description: title,
-    title: 'সরাসরি বিক্রয়',
-    date: new Date().toISOString().split('T')[0],
-    customerName: '',
-    paymentType: 'paid',
-    isManualSell: true
-  });
-  
-  closePopup();
-  showToast('সরাসরি বিক্রয় সংরক্ষিত', 'success');
-  
-  // সম্পূর্ণ প্রজেক্ট রিলোড করুন
-  setTimeout(() => {
-    window.location.reload();
-  }, 300);
-}
-
-    function handleAddCustomer() {
-  const name = $('pCustNameInput').value.trim();
-  if (!name) {
-    showToast('নাম দিন', 'error');
-    return;
-  }
-  
-  if (customers.find(c => c.name.toLowerCase() === name.toLowerCase())) {
-    showToast('এই নামে কাস্টমার আছে', 'error');
-    return;
-  }
-  
-  // কাস্টমার যোগ করুন
-  addCustomer({
-    name: name,
-    phone: $('pCustPhone').value.trim(),
-    address: $('pCustAddress').value.trim()
-  });
-  
-  closePopup();
-  showToast('কাস্টমার যোগ হয়েছে', 'success');
-  
-  // সম্পূর্ণ প্রজেক্ট রিলোড করুন
-  setTimeout(() => {
-    location.reload(true); // true = ক্যাশ ক্লিয়ার করে রিলোড
-  }, 500); // টোস্ট মেসেজ দেখানোর জন্য সামান্য delay
-}
-
-    function renderCustomerViewPopup(custId) {
-      const c = customers.find(x => x.id === custId);
-      if (!c) return;
-      const txns = getCustomerTransactions(c.name);
-      const due = getCustomerDue(c.name);
-      let txnHtml = '';
-      if (txns.length === 0) {
-        txnHtml = '<div style="text-align:center;color:#94a3b8;padding:1rem;">কোনো লেনদেন নেই</div>';
-      } else {
-        [...txns].reverse().forEach(t => {
-          const ds = new Date(t.date).toLocaleDateString('bn-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-          const cls = t.type === 'buy' ? 'buy' : 'sell';
-          const sign = t.type === 'buy' ? '-' : '+';
-          const pt = t.paymentType === 'due' ? ' · ⏳বাকি' : '';
-          txnHtml += '<div class="history-item"><div class="h-left"><span class="h-title">' + (t.title || t.type) + '</span><span class="h-desc">' + (t.description || '') + pt + ' · ' + ds + '</span></div><div class="h-right ' + cls + '">' + sign + ' ৳' + formatCurrency(t.amount) + '</div></div>';
-        });
-      }
-      $('popupTitle').innerHTML = '<i class="fas fa-user" style="color:#2563eb"></i> ' + c.name;
-      $('popupFields').innerHTML =
-        '<div style="background:#f8fafc;border-radius:16px;padding:0.8rem;margin-bottom:0.8rem;display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">' +
-        '<div><div style="font-size:0.6rem;color:#64748b;text-transform:uppercase;">ফোন</div><div style="font-weight:600;font-size:0.9rem;">' + (c.phone || 'N/A') + '</div></div>' +
-        '<div><div style="font-size:0.6rem;color:#64748b;text-transform:uppercase;">ঠিকানা</div><div style="font-weight:600;font-size:0.9rem;">' + (c.address || 'N/A') + '</div></div>' +
-        '<div><div style="font-size:0.6rem;color:#64748b;text-transform:uppercase;">মোট লেনদেন</div><div style="font-weight:600;font-size:0.9rem;">' + txns.length + '</div></div>' +
-        '<div><div style="font-size:0.6rem;color:#64748b;text-transform:uppercase;">বাকি</div><div style="font-weight:700;font-size:0.9rem;color:' + (due > 0 ? '#dc2626' : '#16a34a') + ';">৳' + formatCurrency(due) + '</div></div></div>' +
-        '<div style="font-size:0.85rem;font-weight:600;color:#0b1a33;margin-bottom:0.5rem;">লেনদেন তালিকা</div>' +
-        '<div style="max-height:200px;overflow-y:auto;">' + txnHtml + '</div>';
-      $('popupActions').innerHTML = '<button class="btn-cancel" onclick="closePopup()">বন্ধ</button><button class="btn-danger" onclick="closePopup();window._deleteCustomer(\'' + c.id + '\')"><i class="fas fa-trash-can"></i> ডিলিট</button>';
-      $('popupOverlay').classList.add('active');
-    }
-
-    function renderCustomerEditPopup(custId) {
-      const c = customers.find(x => x.id === custId);
-      if (!c) return;
-      editingCustomerId = custId;
-      $('popupTitle').innerHTML = '<i class="fas fa-user-pen" style="color:#92400e"></i> কাস্টমার সম্পাদনা';
-      $('popupFields').innerHTML =
-        '<label>নাম *</label><input type="text" id="pEditCustName" value="' + c.name + '">' +
-        '<label>ফোন</label><input type="text" id="pEditCustPhone" value="' + (c.phone || '') + '" inputmode="tel">' +
-        '<label>ঠিকানা</label><input type="text" id="pEditCustAddress" value="' + (c.address || '') + '">';
-      $('popupActions').innerHTML = '<button class="btn-cancel" onclick="closePopup()">বাতিল</button><button class="btn-confirm" onclick="handleEditCustomer()">আপডেট</button>';
-      $('popupOverlay').classList.add('active');
-    }
-
-    function handleEditCustomer() {
-      const name = $('pEditCustName').value.trim();
-      if (!name) { showToast('নাম দিন', 'error'); return; }
-      const oldCust = customers.find(c => c.id === editingCustomerId);
-      const oldName = oldCust ? oldCust.name : '';
-      updateCustomer(editingCustomerId, { name, phone: $('pEditCustPhone').value.trim(), address: $('pEditCustAddress').value.trim() });
-      if (oldName && oldName !== name) {
-        transactions.forEach(t => { if (t.customerName === oldName) t.customerName = name; });
-        saveLocal();
-        transactions.filter(t => t.customerName === name).forEach(t => {
-          getTxnRef().doc(t.id).update({ customerName: name }).catch(() => {});
-        });
-      }
+      const newDue = getCustomerNetDue(loanPaySelectedCustName);
+      showToast(loanPaySelectedCustName + ' এর ঋণ পরিশোধ সফল! বাকি: ৳' + formatCurrency(newDue), 'success');
       closePopup();
-      updateAllUI();
-      showToast('কাস্টমার আপডেট হয়েছে', 'success');
     }
 
-    // গ্লোবাল
-    window._viewCustomer = id => openPopup('customer_view', id);
-    window._editCustomer = id => openPopup('customer_edit', id);
-    window._deleteCustomer = id => {
-      const c = customers.find(x => x.id === id);
-      if (!c) return;
-      if (!confirm('"' + c.name + '" ডিলিট করতে চান? সম্পর্কিত লেনদেনও ডিলিট হবে।')) return;
-      transactions.filter(t => t.customerName === c.name).forEach(t => deleteTransaction(t.id));
-      deleteCustomer(id);
-      showToast('কাস্টমার ডিলিট হয়েছে', 'success');
-    };
-    window.selectCustFromDropdown = selectCustFromDropdown;
-    window.closePopup = closePopup;
-    window.openPopup = openPopup;
-    window.handleBuy = handleBuy;
-    window.handleSell = handleSell;
-    window.handleManualSell = handleManualSell;
-    window.handleAddCustomer = handleAddCustomer;
-    window.handleEditCustomer = handleEditCustomer;
-    window.setPaymentType = setPaymentType;
+    // ====== কাস্টমার সম্পাদনা ======
+    function handleEditCustSubmit() {
+      const name = $('editCustName').value.trim();
+      const phone = $('editCustPhone').value.trim();
+      const addr = $('editCustAddr').value.trim();
+      if (!name) { showToast('নাম দিন', 'error'); return; }
+      updateCustomer(editingCustomerId, { name, phone, address: addr });
+      showToast('কাস্টমার আপডেট হয়েছে', 'success');
+      closePopup();
+    }
+
+    // ====== কাস্টমার মুছুন ======
+    function handleDeleteCustSubmit() {
+      deleteCustomer(editingCustomerId);
+      showToast('কাস্টমার মুছে ফেলা হয়েছে', 'success');
+      closePopup();
+    }
+
+    // ====== লেনদেন মুছুন ======
+    function handleDeleteTxnSubmit() {
+      deleteTransaction(editingCustomerId);
+      showToast('লেনদেন মুছে ফেলা হয়েছে', 'success');
+      closePopup();
+    }
 
     // ============================================
-    // অথেনটিকেশন ও প্রোফাইল
+    // গ্লোবাল ফাংশন (HTML onclick এর জন্য)
+    // ============================================
+    window._viewCustomer = function(id) {
+      const c = customers.find(x => x.id === id);
+      if (c) openPopup('view_customer', c);
+    };
+
+    window._editCustomer = function(id) {
+      const c = customers.find(x => x.id === id);
+      if (c) openPopup('edit_customer', c);
+    };
+
+    window._deleteCustomer = function(id) {
+      const c = customers.find(x => x.id === id);
+      if (c) openPopup('delete_customer', c);
+    };
+
+    window._deleteTxn = function(id) {
+      openPopup('delete_transaction', id);
+    };
+
+    // ============================================
+    // প্রোফাইল বাটন আপডেট
     // ============================================
     function updateProfileBtn() {
       const wrap = $('profileBtnWrap');
       if (currentUser) {
         const initial = (currentUser.displayName || currentUser.email || '?')[0].toUpperCase();
-        wrap.innerHTML = '<div class="profile-avatar" id="profileAvatarBtn" title="প্রোফাইল">' + initial + '</div>';
-        $('profileAvatarBtn').addEventListener('click', e => { e.stopPropagation(); $('profilePopup').classList.toggle('show'); });
-      } else {
-        wrap.innerHTML = '<div class="login-icon-btn" id="loginBtn" title="লগইন"><i class="fas fa-right-to-bracket"></i></div>';
-        $('loginBtn').addEventListener('click', showLoginPopup);
-      }
-      if (currentUser) {
-        const initial = (currentUser.displayName || currentUser.email || '?')[0].toUpperCase();
+        wrap.innerHTML = '<div class="profile-avatar" id="profileAvatarBtn">' + initial + '</div>';
+        $('profileAvatarBtn').addEventListener('click', toggleProfilePopup);
+        // প্রোফাইল পপআপ আপডেট
         $('profAvatar').textContent = initial;
         $('profName').textContent = currentUser.displayName || 'ইউজার';
         $('profEmail').textContent = currentUser.email || '';
         $('profTxnCount').textContent = transactions.length;
         $('profCustCount').textContent = customers.length;
-        let due = 0;
-        transactions.forEach(t => { if (t.type === 'sell' && t.paymentType === 'due') due += t.amount; });
-        $('profDueCount').textContent = formatCurrency(due);
+        let totalDue = 0;
+        transactions.forEach(t => {
+          if (t.type === 'sell' && t.paymentType === 'due') totalDue += t.amount;
+          if (t.type === 'loan_payment') totalDue -= t.amount;
+        });
+        $('profDueCount').textContent = formatCurrency(Math.max(0, totalDue));
+      } else {
+        wrap.innerHTML = '<div class="login-icon-btn" id="loginIconBtn"><i class="fas fa-right-to-bracket"></i></div>';
+        $('loginIconBtn').addEventListener('click', openLoginPopup);
       }
     }
 
-    function showLoginPopup() {
-      $('popupTitle').innerHTML = '<i class="fas fa-right-to-bracket" style="color:#2563eb"></i> লগইন করুন';
+    function toggleProfilePopup() {
+      $('profilePopup').classList.toggle('show');
+    }
+
+    // প্রোফাইল পপআপের বাইরে ক্লিক করলে বন্ধ
+    document.addEventListener('click', function(e) {
+      const popup = $('profilePopup');
+      const btn = $('profileAvatarBtn');
+      if (popup && popup.classList.contains('show') && !popup.contains(e.target) && btn && !btn.contains(e.target)) {
+        popup.classList.remove('show');
+      }
+    });
+
+    // ============================================
+    // লগইন সিস্টেম
+    // ============================================
+    function openLoginPopup() {
+      openPopup('login');
       $('popupBox').classList.add('login-popup-box');
+      $('popupTitle').innerHTML = '<i class="fas fa-right-to-bracket" style="color:#2563eb"></i> লগইন করুন';
       $('popupFields').innerHTML =
-        '<p style="color:#64748b;font-size:0.85rem;margin-bottom:0.5rem;">আপনার ডাটা সুরক্ষিত রাখতে লগইন করুন। একবার লগইন করলে আর করতে হবে না।</p>' +
+        '<p style="color:#64748b;font-size:0.85rem;margin-bottom:0.3rem;">আপনার ডেটা সুরক্ষিত রাখতে লগইন করুন</p>' +
         '<div class="social-btns">' +
-        '<button class="social-btn google" onclick="loginWithGoogle()"><i class="fab fa-google" style="color:#EA4335;"></i> Google দিয়ে লগইন</button>' +
-        '<button class="social-btn github" onclick="loginWithGithub()"><i class="fab fa-github"></i> GitHub দিয়ে লগইন</button></div>' +
-        '<div class="divider">অথবা ইমেইল দিয়ে</div>' +
-        '<label>ইমেইল</label><input type="email" id="loginEmail" placeholder="your@email.com">' +
-        '<label>পাসওয়ার্ড</label><input type="password" id="loginPass" placeholder="পাসওয়ার্ড">';
-      $('popupActions').innerHTML =
-        '<button class="btn-cancel" onclick="closePopup()">বাতিল</button>' +
-        '<button class="btn-confirm" onclick="loginWithEmail()">লগইন</button>' +
-        '<button class="btn-confirm" style="background:#7c3aed" onclick="signupWithEmail()">রেজিস্টার</button>';
-      $('popupOverlay').classList.add('active');
+          '<button class="social-btn google" onclick="loginWithGoogle()"><i class="fab fa-google"></i> Google দিয়ে লগইন</button>' +
+          '<button class="social-btn github" onclick="loginWithGithub()"><i class="fab fa-github"></i> GitHub দিয়ে লগইন</button>' +
+        '</div>' +
+        '<div class="divider">অথবা</div>' +
+        '<label>ইমেইল</label><input type="email" id="loginEmail" placeholder="email@example.com">' +
+        '<label>পাসওয়ার্ড</label><input type="password" id="loginPass" placeholder="পাসওয়ার্ড">' +
+        '<div style="display:flex;gap:0.5rem;margin-top:0.8rem">' +
+          '<button class="btn-confirm" style="flex:1" onclick="loginWithEmail()">লগইন</button>' +
+          '<button class="btn-cancel" style="flex:1" onclick="signupWithEmail()">সাইনআপ</button>' +
+        '</div>';
+      $('popupActions').innerHTML = '';
     }
 
-    async function loginWithGoogle() {
-      try { await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); closePopup(); showToast('সফলভাবে লগইন হয়েছে', 'success'); }
-      catch (e) { showToast('লগইন ব্যর্থ: ' + e.message, 'error'); }
-    }
-    async function loginWithGithub() {
-      try { await auth.signInWithPopup(new firebase.auth.GithubAuthProvider()); closePopup(); showToast('সফলভাবে লগইন হয়েছে', 'success'); }
-      catch (e) { showToast('লগইন ব্যর্থ: ' + e.message, 'error'); }
-    }
-    async function loginWithEmail() {
-      const email = $('loginEmail').value.trim(), pass = $('loginPass').value;
-      if (!email || !pass) { showToast('ইমেইল ও পাসওয়ার্ড দিন', 'error'); return; }
-      try { await auth.signInWithEmailAndPassword(email, pass); closePopup(); showToast('সফলভাবে লগইন হয়েছে', 'success'); }
-      catch (e) { showToast('লগইন ব্যর্থ: ' + e.message, 'error'); }
-    }
-    async function signupWithEmail() {
-      const email = $('loginEmail').value.trim(), pass = $('loginPass').value;
-      if (!email || !pass) { showToast('ইমেইল ও পাসওয়ার্ড দিন', 'error'); return; }
-      if (pass.length < 6) { showToast('পাসওয়ার্ড ৬ অক্ষরের বেশি হতে হবে', 'error'); return; }
-      try { await auth.createUserWithEmailAndPassword(email, pass); closePopup(); showToast('রেজিস্ট্রেশন সফল!', 'success'); }
-      catch (e) { showToast('রেজিস্ট্রেশন ব্যর্থ: ' + e.message, 'error'); }
+    function loginWithGoogle() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider).catch(e => showToast('লগইন ব্যর্থ: ' + e.message, 'error'));
     }
 
-    async function handleLogout() {
-      $('profilePopup').classList.remove('show');
-      try { await auth.signOut(); } catch (e) {}
-      currentUser = null;
-      transactions = [];
-      customers = [];
-      pendingDeletes = [];
-      updateAllUI();
-      showToast('লগ আউট হয়েছে', 'success');
+    function loginWithGithub() {
+      const provider = new firebase.auth.GithubAuthProvider();
+      auth.signInWithPopup(provider).catch(e => showToast('লগইন ব্যর্থ: ' + e.message, 'error'));
+    }
+
+    function loginWithEmail() {
+      const email = $('loginEmail') ? $('loginEmail').value.trim() : '';
+      const pass = $('loginPass') ? $('loginPass').value : '';
+      if (!email || !pass) { showToast('ইমেইল ও পাসওয়ার্ড দিন', 'error'); return; }
+      auth.signInWithEmailAndPassword(email, pass).catch(e => showToast('লগইন ব্যর্থ: ' + e.message, 'error'));
+    }
+
+    function signupWithEmail() {
+      const email = $('loginEmail') ? $('loginEmail').value.trim() : '';
+      const pass = $('loginPass') ? $('loginPass').value : '';
+      if (!email || !pass) { showToast('ইমেইল ও পাসওয়ার্ড দিন', 'error'); return; }
+      if (pass.length < 6) { showToast('পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে', 'error'); return; }
+      auth.createUserWithEmailAndPassword(email, pass).catch(e => showToast('সাইনআপ ব্যর্থ: ' + e.message, 'error'));
     }
 
     // ============================================
-    // Auth State Observer
+    // Auth State পরিবর্তন হ্যান্ডলার
     // ============================================
-    auth.onAuthStateChanged(async function (user) {
+    auth.onAuthStateChanged(function(user) {
       currentUser = user;
-      updateSyncIndicator();
       if (user) {
-        loadLocal();
-        updateAllUI();
-        await loadFromFirestore();
-        if (isOnline) await syncLocalToFirestore();
+        transactions = [];
+        customers = [];
+        pendingDeletes = [];
+        loadFromFirestore();
+        updateSyncIndicator();
+        if (isOnline) syncLocalToFirestore();
       } else {
         transactions = [];
         customers = [];
         pendingDeletes = [];
         updateAllUI();
+        updateSyncIndicator();
       }
     });
 
     // ============================================
-    // অনলাইন/অফলাইন ইভেন্ট
+    // লগআউট
     // ============================================
-    window.addEventListener('online', async function () {
-      isOnline = true;
-      updateSyncIndicator();
-      if (currentUser) await syncLocalToFirestore();
-    });
-    window.addEventListener('offline', function () {
-      isOnline = false;
-      updateSyncIndicator();
+    $('logoutBtn').addEventListener('click', function() {
+      auth.signOut().then(() => {
+        $('profilePopup').classList.remove('show');
+        showToast('সফলভাবে লগ আউট হয়েছে', 'success');
+      });
     });
 
     // ============================================
     // নেভিগেশন
     // ============================================
-    document.querySelectorAll('.nav-item[data-page]').forEach(btn => {
-      btn.addEventListener('click', function () {
-        const page = this.getAttribute('data-page');
+    document.querySelectorAll('#bottomNav .nav-item[data-page]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const page = this.dataset.page;
         document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        const target = $('page-' + page);
-        if (target) target.classList.add('active');
+        document.querySelectorAll('#bottomNav .nav-item').forEach(n => n.classList.remove('active'));
+        $('page-' + page).classList.add('active');
         this.classList.add('active');
-        $('profilePopup').classList.remove('show');
-        if (page === 'analysis') setTimeout(() => rebuildMonthlyData($('filterMonth') ? $('filterMonth').value : null), 100);
       });
     });
 
-    document.addEventListener('click', function (e) {
-      if (!e.target.closest('#profilePopup') && !e.target.closest('#profileAvatarBtn') && !e.target.closest('#loginBtn')) {
-        $('profilePopup').classList.remove('show');
-      }
-    });
+    // ============================================
+    // ইভেন্ট বাইন্ডিং
+    // ============================================
+    $('buyBtn').addEventListener('click', () => openPopup('buy'));
+    $('sellBtn').addEventListener('click', () => openPopup('sell'));
+    $('manualSellBtn').addEventListener('click', () => openPopup('manual_sell'));
+    $('loanPayBtn').addEventListener('click', () => openPopup('loan_pay'));
 
-    // ============================================
-    // ইভেন্ট লিসেনার
-    // ============================================
-    $('buyBtn').addEventListener('click', () => { if (!currentUser) { showLoginPopup(); return; } openPopup('buy'); });
-    $('sellBtn').addEventListener('click', () => {
-      if (!currentUser) { showLoginPopup(); return; }
-      if (customers.length === 0) { showToast('প্রথমে কাস্টমার যোগ করুন', 'error'); openPopup('customer_add'); return; }
-      openPopup('sell');
-    });
-    $('manualSellBtn').addEventListener('click', () => { if (!currentUser) { showLoginPopup(); return; } openPopup('manual_sell'); });
-    $('logoutBtn').addEventListener('click', handleLogout);
-    $('applyHistoryFilter').addEventListener('click', () => {
-      currentHistoryFilter = { date: $('historyDateFilter').value || null, month: $('historyMonthFilter').value || null, year: $('historyYearFilter').value || null };
+    // ইতিহাস ফিল্টার
+    $('applyHistoryFilter').addEventListener('click', function() {
+      currentHistoryFilter.date = $('historyDateFilter').value || null;
+      currentHistoryFilter.month = $('historyMonthFilter').value || null;
+      currentHistoryFilter.year = $('historyYearFilter').value || null;
       renderHistory();
     });
-    $('resetHistoryFilter').addEventListener('click', () => {
+    $('resetHistoryFilter').addEventListener('click', function() {
       currentHistoryFilter = { date: null, month: null, year: null };
       $('historyDateFilter').value = '';
       $('historyMonthFilter').value = '';
       $('historyYearFilter').value = '';
       renderHistory();
     });
-    $('customerSearchInput').addEventListener('input', renderCustomers);
-    $('applyFilterBtn').addEventListener('click', () => rebuildMonthlyData($('filterMonth').value));
-    $('resetFilterBtn').addEventListener('click', () => { $('filterMonth').value = ''; rebuildMonthlyData(null); });
-    $('popupOverlay').addEventListener('click', function (e) { if (e.target === this) closePopup(); });
 
-    $('currentDate').textContent = new Date().toLocaleDateString('bn-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+    // বিশ্লেষণ ফিল্টার
+    $('applyFilterBtn').addEventListener('click', function() {
+      rebuildMonthlyData($('filterMonth').value || null);
+    });
+    $('resetFilterBtn').addEventListener('click', function() {
+      $('filterMonth').value = '';
+      rebuildMonthlyData(null);
+    });
 
+    // কাস্টমার সার্চ
+    $('customerSearchInput').addEventListener('input', function() {
+      renderCustomers();
+    });
+
+    // ============================================
+    // তারিখ সেট
+    // ============================================
+    $('currentDate').textContent = new Date().toLocaleDateString('bn-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+
+    // ============================================
+    // অনলাইন/অফলাইন ট্র্যাকিং
+    // ============================================
+    window.addEventListener('online', function() {
+      isOnline = true;
+      updateSyncIndicator();
+      if (currentUser) syncLocalToFirestore();
+    });
+    window.addEventListener('offline', function() {
+      isOnline = false;
+      updateSyncIndicator();
+    });
+
+    // ============================================
+    // ডকুমেন্ট ক্লিক – ড্রপডাউন বন্ধ
+    // ============================================
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.cust-search-wrap')) {
+        document.querySelectorAll('.cust-dropdown.show').forEach(d => d.classList.remove('show'));
+      }
+    });
+
+    // প্রাথমিক UI
     updateAllUI();
   </script>
 </body>
