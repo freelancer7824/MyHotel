@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+  <title>📊 লেনদেন ট্র্যাকার – Hisab.io</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+    body{background:#f4f7fc;min-height:100vh;padding-bottom:80px;}
+    .top-nav{background:#fff;padding:0.7rem 1.2rem;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 16px rgba(0,0,0,0.02);border-bottom:1px solid rgba(0,0,0,0.03);position:sticky;top:0;z-index:40;}
+    .top-nav .brand{display:flex;align-items:center;gap:0.4rem;font-size:1.2rem;font-weight:700;letter-spacing:-0.3px;color:#0b1a33;}
+    .top-nav .brand i{background:linear-gradient(145deg,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:1.4rem;}
+    .top-nav .nav-date{background:#f1f5f9;padding:0.25rem 1rem;border-radius:60px;font-size:0.7rem;font-weight:500;color:#1e293b;border:1px solid #e9edf2;}
+    .top-nav .nav-date i{margin-right:4px;color:#64748b;}
+    .sync-indicator{font-size:0.65rem;padding:0.15rem 0.6rem;border-radius:40px;font-weight:600;display:flex;align-items:center;gap:4px;white-space:nowrap;}
+    .sync-indicator.online{background:#dcfce7;color:#15803d;}
+    .sync-indicator.offline{background:#fef3c7;color:#92400e;}
+    .sync-indicator.syncing{background:#dbeafe;color:#1e3a8a;animation:pulse 1s infinite;}
+    .sync-indicator.nologin{background:#f1f5f9;color:#64748b;}
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.5;}}
+    .container{max-width:1380px;margin:0 auto;padding:1rem 0.8rem;}
+    .page-section{display:none;animation:fadeUp 0.25s ease;}
+    .page-section.active{display:block;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.6rem;margin-bottom:0.8rem;}
+    .stat-card{background:#fff;border-radius:20px;padding:0.5rem 0.2rem;box-shadow:0 4px 12px -4px rgba(0,20,40,0.02);display:flex;flex-direction:column;align-items:center;text-align:center;border:1px solid rgba(255,255,255,0.5);min-width:0;}
+    .stat-card i{font-size:1.2rem;margin-bottom:0.05rem;background:#f1f5f9;padding:0.3rem;border-radius:14px;width:2.2rem;height:2.2rem;display:flex;align-items:center;justify-content:center;color:#1e293b;}
+    .stat-card .label{font-size:0.55rem;text-transform:uppercase;letter-spacing:0.2px;font-weight:600;color:#64748b;margin-top:0.05rem;line-height:1.2;}
+    .stat-card .value{font-size:1.2rem;font-weight:700;color:#0b1a33;letter-spacing:-0.2px;line-height:1.2;}
+    .stat-card .sub{font-size:0.5rem;color:#94a3b8;font-weight:500;}
+    .stat-card.buy i{background:#dbeafe;color:#2563eb;}
+    .stat-card.sell i{background:#dcfce7;color:#16a34a;}
+    .stat-card.profit i{background:#ede9fe;color:#7c3aed;}
+    .stat-card.loss i{background:#fee2e2;color:#dc2626;}
+    .stock-card{background:#fff;border-radius:24px;padding:1rem 1.2rem;margin-bottom:1.2rem;box-shadow:0 2px 12px rgba(0,0,0,0.01);border:1px solid #f1f5f9;}
+    .stock-card .stock-header{display:flex;align-items:center;gap:0.6rem;font-weight:600;color:#0b1a33;font-size:0.95rem;margin-bottom:0.6rem;}
+    .stock-card .stock-header i{font-size:1.3rem;color:#2563eb;background:#dbeafe;padding:0.3rem;border-radius:14px;width:2.2rem;height:2.2rem;display:flex;align-items:center;justify-content:center;}
+    .stock-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.8rem;}
+    .stock-item{background:#f8fafc;border-radius:16px;padding:0.6rem 0.4rem;text-align:center;}
+    .stock-item .stock-label{font-size:0.6rem;text-transform:uppercase;color:#64748b;font-weight:500;letter-spacing:0.2px;}
+    .stock-item .stock-value{font-size:1.1rem;font-weight:700;color:#0b1a33;}
+    .stock-item .stock-sub{font-size:0.55rem;color:#94a3b8;}
+    .stock-item.highlight{background:#eff6ff;border:1px solid #bfdbfe;}
+    .stock-item.warning{background:#fef3c7;border:1px solid #fcd34d;}
+    .stock-item.customer-card{background:#f0fdf4;border:1px solid #bbf7d0;}
+    .stock-item.due-card{background:#fef2f2;border:1px solid #fecaca;}
+    .loss-cover-card{background:#fff;border-radius:24px;padding:0.8rem 1.2rem;margin-bottom:1.2rem;box-shadow:0 2px 12px rgba(0,0,0,0.01);border:1px solid #f1f5f9;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;}
+    .loss-cover-card .cover-label{display:flex;align-items:center;gap:0.5rem;font-weight:600;color:#1e293b;font-size:0.85rem;}
+    .loss-cover-card .cover-label i{font-size:1.2rem;background:#f1f5f9;padding:0.3rem;border-radius:12px;width:2rem;height:2rem;display:flex;align-items:center;justify-content:center;color:#2563eb;}
+    .loss-cover-card .cover-amount{font-size:1.5rem;font-weight:700;color:#0b1a33;letter-spacing:-0.3px;}
+    .loss-cover-card .cover-sub{color:#64748b;font-size:0.7rem;font-weight:500;margin-left:0.3rem;}
+    .loss-cover-card .cover-status{font-size:0.7rem;font-weight:600;padding:0.2rem 0.8rem;border-radius:40px;background:#f1f5f9;color:#334155;}
+    .action-section{display:flex;gap:0.8rem;flex-wrap:wrap;margin:0.8rem 0 1.2rem;justify-content:center;}
+    .action-btn{border:none;padding:0.6rem 1.6rem;border-radius:60px;font-weight:600;font-size:0.85rem;display:inline-flex;align-items:center;gap:0.4rem;transition:0.1s;cursor:pointer;flex:1 1 auto;justify-content:center;background:#fff;border:1px solid #e9edf2;font-family:inherit;}
+    .action-btn i{font-size:1rem;}
+    .action-btn.buy{background:#eff6ff;border-color:#bfdbfe;color:#1e3a8a;}
+    .action-btn.buy:hover{background:#dbeafe;}
+    .action-btn.sell{background:#f0fdf4;border-color:#bbf7d0;color:#14532d;}
+    .action-btn.sell:hover{background:#dcfce7;}
+    .action-btn.manual-sell{background:#fef3c7;border-color:#fcd34d;color:#92400e;}
+    .action-btn.manual-sell:hover{background:#fde68a;}
+    .chart-section{background:#fff;border-radius:28px;padding:1rem 0.8rem;margin:1rem 0 0.2rem;border:1px solid #f1f5f9;}
+    .chart-section h3{display:flex;align-items:center;gap:0.4rem;color:#0b1a33;font-weight:600;margin-bottom:0.8rem;font-size:0.9rem;}
+    .chart-section h3 i{color:#2563eb;}
+    .chart-wrapper{height:180px;position:relative;}
+    .history-list{background:#fff;border-radius:28px;padding:1rem;border:1px solid #f1f5f9;margin-top:1rem;}
+    .history-list h3{font-size:1rem;color:#0b1a33;margin-bottom:0.8rem;display:flex;align-items:center;gap:0.5rem;}
+    .history-filters{display:flex;gap:0.6rem;flex-wrap:wrap;margin-bottom:1rem;align-items:center;}
+    .history-filters label{font-weight:500;color:#334155;font-size:0.75rem;}
+    .history-filters input[type="date"],.history-filters input[type="month"],.history-filters input[type="number"]{padding:0.3rem 0.6rem;border-radius:40px;border:1.5px solid #e9edf2;font-size:0.75rem;background:#fafcff;font-family:inherit;}
+    .history-filters input:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.06);}
+    .history-filters button{padding:0.3rem 1rem;border-radius:40px;border:none;background:#2563eb;color:white;font-weight:600;font-size:0.75rem;cursor:pointer;font-family:inherit;}
+    .history-filters button:hover{background:#1d4ed8;}
+    .history-filters .reset-btn{background:#e9edf2;color:#334155;}
+    .history-filters .reset-btn:hover{background:#d1d5db;}
+    .history-item{display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid #f1f5f9;font-size:0.85rem;}
+    .history-item:last-child{border-bottom:none;}
+    .history-item .h-left{display:flex;flex-direction:column;flex:1;min-width:0;}
+    .history-item .h-left .h-title{font-weight:600;color:#0b1a33;}
+    .history-item .h-left .h-desc{font-size:0.7rem;color:#94a3b8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .history-item .h-right{font-weight:700;white-space:nowrap;margin-left:0.5rem;}
+    .history-item .h-right.buy{color:#2563eb;}
+    .history-item .h-right.sell{color:#16a34a;}
+    .history-empty{color:#94a3b8;text-align:center;padding:2rem 0;font-size:0.9rem;}
+    .customer-list-page{background:#fff;border-radius:28px;padding:1rem;border:1px solid #f1f5f9;margin-top:1rem;}
+    .customer-list-page h3{font-size:1rem;color:#0b1a33;margin-bottom:0.8rem;display:flex;align-items:center;gap:0.5rem;}
+    .customer-search{width:100%;padding:0.5rem 1rem;border-radius:40px;border:1.5px solid #e9edf2;font-size:0.85rem;margin-bottom:1rem;background:#fafcff;font-family:inherit;}
+    .customer-search:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.06);}
+    .customer-card-item{background:#f8fafc;border-radius:16px;padding:0.8rem 1rem;margin-bottom:0.6rem;border:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;transition:0.1s;}
+    .customer-card-item:hover{background:#f1f5f9;}
+    .customer-card-item .cust-info{flex:1;min-width:0;}
+    .customer-card-item .cust-info .cust-name{font-weight:600;color:#0b1a33;font-size:0.95rem;}
+    .customer-card-item .cust-info .cust-details{font-size:0.75rem;color:#64748b;}
+    .customer-card-item .cust-due{font-weight:700;color:#dc2626;font-size:0.95rem;margin-right:0.8rem;}
+    .customer-card-item .cust-actions{display:flex;gap:0.4rem;flex-wrap:wrap;}
+    .customer-card-item .cust-actions button{padding:0.3rem 0.7rem;border-radius:40px;border:none;font-size:0.7rem;font-weight:600;cursor:pointer;transition:0.1s;font-family:inherit;}
+    .cust-actions .view-btn{background:#dbeafe;color:#1e3a8a;}
+    .cust-actions .view-btn:hover{background:#bfdbfe;}
+    .cust-actions .edit-btn{background:#fef3c7;color:#92400e;}
+    .cust-actions .edit-btn:hover{background:#fde68a;}
+    .cust-actions .delete-btn{background:#fee2e2;color:#991b1b;}
+    .cust-actions .delete-btn:hover{background:#fecaca;}
+    .customer-empty{color:#94a3b8;text-align:center;padding:2rem 0;font-size:0.9rem;}
+    .analysis-filters{display:flex;gap:0.8rem;flex-wrap:wrap;margin-bottom:1rem;align-items:center;}
+    .analysis-filters label{font-weight:500;color:#334155;font-size:0.8rem;}
+    .analysis-filters input[type="month"]{padding:0.4rem 0.8rem;border-radius:40px;border:1.5px solid #e9edf2;font-size:0.8rem;background:#fafcff;font-family:inherit;}
+    .analysis-filters input[type="month"]:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.06);}
+    .analysis-filters button{padding:0.4rem 1.2rem;border-radius:40px;border:none;background:#2563eb;color:white;font-weight:600;font-size:0.8rem;cursor:pointer;font-family:inherit;}
+    .analysis-filters button:hover{background:#1d4ed8;}
+    .analysis-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.6rem;margin-top:1rem;}
+    .analysis-summary-card{background:#fff;border-radius:20px;padding:0.6rem 0.4rem;text-align:center;border:1px solid #f1f5f9;}
+    .analysis-summary-card .label{font-size:0.55rem;text-transform:uppercase;color:#64748b;font-weight:500;}
+    .analysis-summary-card .value{font-size:1.1rem;font-weight:700;color:#0b1a33;}
+    .analysis-summary-card .sub{font-size:0.5rem;color:#94a3b8;}
+    .analysis-summary-card.green .value{color:#16a34a;}
+    .analysis-summary-card.red .value{color:#dc2626;}
+    .analysis-summary-card.blue .value{color:#2563eb;}
+    .analysis-summary-card.purple .value{color:#7c3aed;}
+    .popup-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.4);backdrop-filter:blur(6px);display:none;justify-content:center;align-items:center;z-index:999;padding:1rem;animation:fadeIn 0.15s ease;}
+    .popup-overlay.active{display:flex;}
+    .popup-box{background:white;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;border-radius:40px;padding:1.6rem 1.4rem;box-shadow:0 40px 80px rgba(0,0,0,0.12);animation:scaleUp 0.15s ease;}
+    @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+    @keyframes scaleUp{from{transform:scale(0.95);opacity:0.5;}to{transform:scale(1);opacity:1;}}
+    .popup-box .popup-title{font-size:1.3rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:0.4rem;color:#0b1a33;}
+    .popup-box label{font-weight:500;color:#334155;display:block;margin-top:0.6rem;margin-bottom:0.2rem;font-size:0.8rem;}
+    .popup-box input,.popup-box textarea,.popup-box select{width:100%;padding:0.6rem 1rem;border-radius:40px;border:1.5px solid #e9edf2;font-size:0.9rem;background:#fafcff;font-family:inherit;}
+    .popup-box input:focus,.popup-box textarea:focus,.popup-box select:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 4px rgba(37,99,235,0.06);}
+    .popup-box textarea{border-radius:20px;resize:vertical;min-height:50px;}
+    .popup-actions{display:flex;gap:0.6rem;margin-top:1.4rem;justify-content:flex-end;flex-wrap:wrap;}
+    .popup-actions button{padding:0.5rem 1.4rem;border-radius:60px;border:none;font-weight:600;font-size:0.85rem;cursor:pointer;font-family:inherit;}
+    .popup-actions .btn-confirm{background:#0b1a33;color:white;}
+    .popup-actions .btn-confirm:hover{background:#1e293b;}
+    .popup-actions .btn-cancel{background:#f1f5f9;color:#334155;}
+    .popup-actions .btn-cancel:hover{background:#e2e8f0;}
+    .popup-actions .btn-danger{background:#dc2626;color:white;}
+    .popup-actions .btn-danger:hover{background:#b91c1c;}
+    .cust-search-wrap{position:relative;}
+    .cust-dropdown{position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid #e9edf2;border-radius:16px;max-height:160px;overflow-y:auto;z-index:10;display:none;box-shadow:0 8px 24px rgba(0,0,0,0.1);margin-top:2px;}
+    .cust-dropdown.show{display:block;}
+    .cust-dropdown .cust-drop-item{padding:0.55rem 1rem;cursor:pointer;border-bottom:1px solid #f1f5f9;font-size:0.85rem;transition:background 0.1s;display:flex;justify-content:space-between;align-items:center;}
+    .cust-dropdown .cust-drop-item:last-child{border-bottom:none;}
+    .cust-dropdown .cust-drop-item:hover,.cust-dropdown .cust-drop-item.selected{background:#eff6ff;}
+    .cust-dropdown .cust-drop-item .cust-drop-phone{font-size:0.7rem;color:#94a3b8;}
+    .payment-type-group{display:flex;gap:0.5rem;margin-top:0.2rem;}
+    .payment-type-group button{padding:0.4rem 1rem;border-radius:40px;border:2px solid #e9edf2;background:#fafcff;cursor:pointer;font-size:0.8rem;font-weight:500;flex:1;transition:all 0.15s;font-family:inherit;}
+    .payment-type-group button.active{border-color:#2563eb;background:#eff6ff;color:#1e3a8a;box-shadow:0 0 0 3px rgba(37,99,235,0.15);}
+    .payment-type-group button.paid{border-color:#86efac;background:#f0fdf4;color:#14532d;}
+    .payment-type-group button.paid.active{border-color:#16a34a;background:#dcfce7;box-shadow:0 0 0 3px rgba(22,163,74,0.2);}
+    .payment-type-group button.due{border-color:#fca5a5;background:#fef2f2;color:#991b1b;}
+    .payment-type-group button.due.active{border-color:#dc2626;background:#fee2e2;box-shadow:0 0 0 3px rgba(220,38,38,0.2);}
+    .profile-btn-wrap{position:relative;}
+    .profile-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(145deg,#2563eb,#7c3aed);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;cursor:pointer;border:2px solid #fff;box-shadow:0 2px 8px rgba(37,99,235,0.3);transition:transform 0.15s;}
+    .profile-avatar:hover{transform:scale(1.08);}
+    .login-icon-btn{width:38px;height:38px;border-radius:50%;background:#f1f5f9;color:#64748b;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;border:2px solid #e9edf2;transition:all 0.15s;}
+    .login-icon-btn:hover{background:#e2e8f0;color:#334155;}
+    .profile-popup{position:fixed;bottom:75px;right:12px;background:#fff;border-radius:20px;padding:1.2rem;box-shadow:0 12px 40px rgba(0,0,0,0.15);border:1px solid #f1f5f9;z-index:60;width:280px;display:none;animation:scaleUp 0.15s ease;}
+    .profile-popup.show{display:block;}
+    .profile-popup .prof-header{display:flex;align-items:center;gap:0.8rem;margin-bottom:0.8rem;padding-bottom:0.8rem;border-bottom:1px solid #f1f5f9;}
+    .profile-popup .prof-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(145deg,#2563eb,#7c3aed);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2rem;flex-shrink:0;}
+    .profile-popup .prof-info{flex:1;min-width:0;}
+    .profile-popup .prof-name{font-weight:700;color:#0b1a33;font-size:0.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .profile-popup .prof-email{font-size:0.75rem;color:#64748b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .profile-popup .prof-stat{display:flex;justify-content:space-between;margin-bottom:0.6rem;}
+    .profile-popup .prof-stat div{text-align:center;flex:1;}
+    .profile-popup .prof-stat .ps-val{font-weight:700;color:#0b1a33;font-size:1rem;}
+    .profile-popup .prof-stat .ps-label{font-size:0.6rem;color:#94a3b8;text-transform:uppercase;}
+    .profile-popup .logout-btn{width:100%;padding:0.55rem;border-radius:60px;border:none;background:#fee2e2;color:#dc2626;font-weight:600;font-size:0.85rem;cursor:pointer;font-family:inherit;transition:background 0.15s;}
+    .profile-popup .logout-btn:hover{background:#fecaca;}
+    .login-popup-box{max-width:420px;}
+    .login-popup-box .social-btns{display:flex;flex-direction:column;gap:0.6rem;margin-top:0.8rem;}
+    .login-popup-box .social-btn{display:flex;align-items:center;justify-content:center;gap:0.6rem;padding:0.7rem;border-radius:60px;border:2px solid #e9edf2;background:#fafcff;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.15s;font-family:inherit;}
+    .login-popup-box .social-btn:hover{background:#f1f5f9;}
+    .login-popup-box .social-btn.google{border-color:#fbbc05;color:#333;}
+    .login-popup-box .social-btn.google:hover{background:#fef3c7;}
+    .login-popup-box .social-btn.github{border-color:#333;color:#333;}
+    .login-popup-box .social-btn.github:hover{background:#f1f5f9;}
+    .login-popup-box .divider{display:flex;align-items:center;gap:0.8rem;margin:1rem 0;color:#94a3b8;font-size:0.8rem;}
+    .login-popup-box .divider::before,.login-popup-box .divider::after{content:'';flex:1;height:1px;background:#e9edf2;}
+    .toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#0b1a33;color:#fff;padding:0.6rem 1.4rem;border-radius:60px;font-size:0.85rem;font-weight:500;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.2);animation:toastIn 0.3s ease;pointer-events:none;}
+    .toast.success{background:#15803d;}
+    .toast.error{background:#dc2626;}
+    @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(-10px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+    .bottom-nav{position:fixed;bottom:0;left:0;width:100%;background:rgba(255,255,255,0.94);border-top:1px solid rgba(0,0,0,0.05);display:flex;justify-content:space-around;align-items:center;padding:0.3rem 0 0.5rem;box-shadow:0 -4px 20px rgba(0,0,0,0.03);z-index:50;backdrop-filter:blur(6px);}
+    .bottom-nav .nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.05rem;font-size:0.6rem;font-weight:500;color:#94a3b8;cursor:pointer;transition:0.15s;padding:0.2rem 0.6rem;border-radius:40px;background:transparent;border:none;font-family:inherit;min-width:48px;position:relative;text-decoration:none;-webkit-tap-highlight-color:transparent;}
+    .bottom-nav .nav-item i{font-size:1.3rem;transition:0.15s;}
+    .bottom-nav .nav-item span{font-size:0.55rem;line-height:1.2;}
+    .bottom-nav .nav-item.active{color:#2563eb;}
+    .bottom-nav .nav-item.active i{transform:scale(1.05);}
+    .bottom-nav .nav-item .nav-badge{position:absolute;top:-2px;right:0px;background:#2563eb;color:white;font-size:0.5rem;border-radius:40px;padding:0.05rem 0.35rem;min-width:16px;text-align:center;font-weight:600;line-height:1.3;}
+    @media(max-width:480px){
+      .stock-grid{grid-template-columns:1fr 1fr;}
+      .stock-item .stock-value{font-size:0.95rem;}
+      .stat-card .value{font-size:1rem;}
+      .stat-card i{width:1.8rem;height:1.8rem;font-size:1rem;}
+      .stat-card .label{font-size:0.5rem;}
+      .stats-grid{gap:0.4rem;}
+      .loss-cover-card{flex-direction:column;align-items:flex-start;gap:0.2rem;}
+      .loss-cover-card .cover-amount{font-size:1.2rem;}
+      .popup-box{padding:1.2rem 1rem;}
+      .customer-card-item{flex-direction:column;align-items:flex-start;gap:0.5rem;}
+      .customer-card-item .cust-actions{width:100%;justify-content:flex-start;}
+      .analysis-summary-grid{grid-template-columns:repeat(2,1fr);gap:0.4rem;}
+      .analysis-summary-card .value{font-size:0.95rem;}
+      .bottom-nav .nav-item{min-width:40px;padding:0.1rem 0.3rem;}
+      .bottom-nav .nav-item i{font-size:1.1rem;}
+      .bottom-nav .nav-item span{font-size:0.5rem;}
+      .profile-popup{right:8px;left:8px;width:auto;}
+    }
+    @media(max-width:380px){
+      .stat-card .value{font-size:0.85rem;}
+      .stat-card i{width:1.6rem;height:1.6rem;font-size:0.85rem;}
+      .stats-grid{gap:0.3rem;}
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="top-nav">
+    <div class="brand">
+      <i class="fas fa-hotel"></i> Hisab<span style="font-weight:300;-webkit-text-fill-color:#64748b;">.io</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.5rem;">
+      <span class="sync-indicator nologin" id="syncIndicator"><i class="fas fa-circle" style="font-size:0.5rem"></i> প্রস্তুত</span>
+      <div class="nav-date"><i class="far fa-calendar-alt"></i> <span id="currentDate"></span></div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-section active" id="page-home">
+      <div class="stats-grid">
+        <div class="stat-card buy"><i class="fas fa-cart-shopping"></i><span class="label">Total Buy</span><span class="value" id="totalBuy">0</span><span class="sub">BDT</span></div>
+        <div class="stat-card sell"><i class="fas fa-cash-register"></i><span class="label">Total Sell</span><span class="value" id="totalSell">0</span><span class="sub">BDT</span></div>
+        <div class="stat-card profit"><i class="fas fa-arrow-trend-up"></i><span class="label">Profit</span><span class="value" id="totalProfit">0</span><span class="sub">BDT</span></div>
+        <div class="stat-card loss"><i class="fas fa-arrow-trend-down"></i><span class="label">Loss</span><span class="value" id="totalLoss">0</span><span class="sub">BDT</span></div>
+      </div>
+      <div class="stock-card">
+        <div class="stock-header"><i class="fas fa-warehouse"></i><span>📦 বর্তমান স্টক</span></div>
+        <div class="stock-grid">
+          <div class="stock-item highlight"><div class="stock-label">মোট ক্রয়</div><div class="stock-value" id="stockTotalBuy">0</div><div class="stock-sub">BDT</div></div>
+          <div class="stock-item"><div class="stock-label">বিক্রি হয়েছে</div><div class="stock-value" id="stockSold">0</div><div class="stock-sub">BDT</div></div>
+          <div class="stock-item warning" id="stockRemainingItem"><div class="stock-label">📌 বাকি স্টক</div><div class="stock-value" id="stockRemaining">0</div><div class="stock-sub" id="stockRemainingSub">BDT</div></div>
+          <div class="stock-item customer-card"><div class="stock-label">👥 মোট কাস্টমার</div><div class="stock-value" id="totalCustomers">0</div><div class="stock-sub">ব্যক্তি</div></div>
+          <div class="stock-item due-card"><div class="stock-label">⏳ বর্তমান বাকি</div><div class="stock-value" id="totalDue">0</div><div class="stock-sub">BDT</div></div>
+        </div>
+      </div>
+      <div class="loss-cover-card" id="lossCoverCard">
+        <div class="cover-label"><i class="fas fa-bullseye"></i><span id="coverLabelText">লাভ-ক্ষতি কভার</span></div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.2rem;">
+          <div style="display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;">
+            <span class="cover-amount" id="coverAmount">0</span><span class="cover-sub">BDT</span>
+            <span class="cover-status" id="coverStatus">⚖️ সমান</span>
+          </div>
+          <div style="font-size:0.65rem;color:#64748b;display:flex;gap:0.8rem;flex-wrap:wrap;" id="coverBreakdown">
+            <span>📊 ক্রয়: <strong id="coverTotalBuy">0</strong></span>
+            <span>💰 বিক্রয়: <strong id="coverTotalSell">0</strong></span>
+          </div>
+        </div>
+      </div>
+      <div class="action-section">
+        <button class="action-btn buy" id="buyBtn"><i class="fas fa-plus-circle"></i> ক্রয়</button>
+        <button class="action-btn sell" id="sellBtn"><i class="fas fa-minus-circle"></i> বিক্রয়</button>
+        <button class="action-btn manual-sell" id="manualSellBtn"><i class="fas fa-hand-holding-dollar"></i> সরাসরি বিক্রয়</button>
+      </div>
+    </div>
+
+    <div class="page-section" id="page-history">
+      <div class="history-list">
+        <h3><i class="fas fa-clock-rotate-left"></i> লেনদেনের ইতিহাস</h3>
+        <div class="history-filters">
+          <label>তারিখ:</label><input type="date" id="historyDateFilter">
+          <label>মাস:</label><input type="month" id="historyMonthFilter">
+          <label>বছর:</label><input type="number" id="historyYearFilter" placeholder="YYYY" min="2000" max="2100">
+          <button id="applyHistoryFilter">প্রয়োগ</button>
+          <button id="resetHistoryFilter" class="reset-btn">রিসেট</button>
+        </div>
+        <div id="historyContainer"><div class="history-empty">কোনো লেনদেন নেই।</div></div>
+      </div>
+    </div>
+
+    <div class="page-section" id="page-analysis">
+      <div class="chart-section">
+        <h3><i class="fas fa-chart-column"></i> মাসিক বিশ্লেষণ</h3>
+        <div class="analysis-filters">
+          <label>মাস:</label><input type="month" id="filterMonth">
+          <button id="applyFilterBtn">প্রয়োগ</button>
+          <button id="resetFilterBtn" style="background:#e9edf2;color:#334155;">রিসেট</button>
+        </div>
+        <div class="chart-wrapper"><canvas id="analysisChart"></canvas></div>
+      </div>
+      <div class="analysis-summary-grid">
+        <div class="analysis-summary-card blue"><div class="label">ফিল্টারকৃত ক্রয়</div><div class="value" id="analysisFilteredBuy">0</div><div class="sub">BDT</div></div>
+        <div class="analysis-summary-card purple"><div class="label">ফিল্টারকৃত বিক্রয়</div><div class="value" id="analysisFilteredSell">0</div><div class="sub">BDT</div></div>
+        <div class="analysis-summary-card green"><div class="label">ফিল্টারকৃত লাভ</div><div class="value" id="analysisFilteredProfit">0</div><div class="sub">BDT</div></div>
+        <div class="analysis-summary-card red"><div class="label">ফিল্টারকৃত ক্ষতি</div><div class="value" id="analysisFilteredLoss">0</div><div class="sub">BDT</div></div>
+      </div>
+      <div class="analysis-summary-grid" style="margin-top:0.5rem;">
+        <div class="analysis-summary-card purple"><div class="label">গত মাসের লাভ/ক্ষতি</div><div class="value" id="analysisLastMonth">0</div><div class="sub">BDT</div></div>
+        <div class="analysis-summary-card blue"><div class="label">গত বছরের লাভ/ক্ষতি</div><div class="value" id="analysisLastYear">0</div><div class="sub">BDT</div></div>
+      </div>
+    </div>
+
+    <div class="page-section" id="page-customers">
+      <div class="customer-list-page">
+        <h3><i class="fas fa-users"></i> কাস্টমার লিস্ট</h3>
+        <input type="text" class="customer-search" id="customerSearchInput" placeholder="🔍 কাস্টমার খুঁজুন..." />
+        <div id="customerListContainer"><div class="customer-empty">কোনো কাস্টমার নেই।</div></div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav" id="bottomNav">
+    <button class="nav-item active" data-page="home"><i class="fas fa-house"></i><span>হোম</span></button>
+    <button class="nav-item" data-page="history"><i class="fas fa-clock-rotate-left"></i><span>ইতিহাস</span><span class="nav-badge" id="historyBadge">0</span></button>
+    <button class="nav-item" data-page="analysis"><i class="fas fa-chart-column"></i><span>বিশ্লেষণ</span></button>
+    <button class="nav-item" data-page="customers"><i class="fas fa-users"></i><span>কাস্টমার</span></button>
+    <div class="profile-btn-wrap" id="profileBtnWrap"></div>
+  </nav>
+
+  <div class="profile-popup" id="profilePopup">
+    <div class="prof-header">
+      <div class="prof-avatar" id="profAvatar">?</div>
+      <div class="prof-info">
+        <div class="prof-name" id="profName">ইউজার</div>
+        <div class="prof-email" id="profEmail">email@example.com</div>
+      </div>
+    </div>
+    <div class="prof-stat">
+      <div><div class="ps-val" id="profTxnCount">0</div><div class="ps-label">লেনদেন</div></div>
+      <div><div class="ps-val" id="profCustCount">0</div><div class="ps-label">কাস্টমার</div></div>
+      <div><div class="ps-val" id="profDueCount">0</div><div class="ps-label">বাকি (BDT)</div></div>
+    </div>
+    <button class="logout-btn" id="logoutBtn"><i class="fas fa-right-from-bracket"></i> লগ আউট</button>
+  </div>
+
+  <div class="popup-overlay" id="popupOverlay">
+    <div class="popup-box" id="popupBox">
+      <div class="popup-title" id="popupTitle"></div>
+      <div id="popupFields"></div>
+      <div class="popup-actions" id="popupActions"></div>
+    </div>
+  </div>
+
+  <script>
+    // ============================================
+    // Firebase কনফিগারেশন
+    // ============================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyDOJaV7zMLhtA-_z1nkcdbtaa3w7M_0Fh4",
+      authDomain: "money-generate-dbab3.firebaseapp.com",
+      databaseURL: "https://money-generate-dbab3-default-rtdb.firebaseio.com",
+      projectId: "money-generate-dbab3",
+      storageBucket: "money-generate-dbab3.firebasestorage.app",
+      messagingSenderId: "579756089926",
+      appId: "1:579756089926:web:abbe35377e3657889be047"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    db.enablePersistence({ synchronizeTabs: true }).catch(function(err) {
+      if (err.code === 'failed-precondition') {
+        console.warn('পার্সিস্টেন্স ফেইল: একাধিক ট্যাব');
+      } else if (err.code === 'unimplemented') {
+        console.warn('ব্রাউজার পার্সিস্টেন্স সাপোর্ট করে না');
+      }
+    });
+
+    // ============================================
+    // অ্যাপ স্টেট
+    // ============================================
+    let currentUser = null;
+    let transactions = [];
+    let customers = [];
+    let pendingDeletes = [];
+    let currentPopupMode = 'buy';
+    let selectedCustomerId = null;
+    let editingCustomerId = null;
+    let paymentType = 'paid';
+    let chartInstance = null;
+    let currentHistoryFilter = { date: null, month: null, year: null };
+    let isOnline = navigator.onLine;
+
+    const $ = id => document.getElementById(id);
+
+    // ============================================
+    // ইউটিলিটি
+    // ============================================
+    function formatCurrency(val) {
+      return Number(val || 0).toLocaleString('en-IN');
+    }
+
+    function genId() {
+      return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+    }
+
+    function showToast(msg, type) {
+      const t = document.createElement('div');
+      t.className = 'toast ' + (type || '');
+      t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 2500);
+    }
+
+    // অফলাইনেও আইকন ঠিকমতো দেখানোর জন্য সিঙ্ক ইন্ডিকেটর
+    function updateSyncIndicator() {
+      const el = $('syncIndicator');
+      if (!currentUser) {
+        el.className = 'sync-indicator nologin';
+        el.innerHTML = '<i class="fas fa-circle" style="font-size:0.45rem"></i> প্রস্তুত';
+        return;
+      }
+      if (isOnline) {
+        el.className = 'sync-indicator online';
+        el.innerHTML = '<i class="fas fa-wifi"></i> অনলাইন';
+      } else {
+        el.className = 'sync-indicator offline';
+        el.innerHTML = '<i class="fas fa-tower-broadcast"></i> অফলাইন';
+      }
+    }
+
+    // ============================================
+    // লোকাল স্টোরেজ
+    // ============================================
+    function getLocalKey(suffix) {
+      return 'hisab_' + (currentUser ? currentUser.uid : 'guest') + '_' + suffix;
+    }
+
+    function saveLocal() {
+      if (!currentUser) return;
+      try {
+        localStorage.setItem(getLocalKey('transactions'), JSON.stringify(transactions));
+        localStorage.setItem(getLocalKey('customers'), JSON.stringify(customers));
+        localStorage.setItem(getLocalKey('pendingDeletes'), JSON.stringify(pendingDeletes));
+      } catch (e) { console.warn('Local save failed', e); }
+    }
+
+    function loadLocal() {
+      if (!currentUser) return;
+      try {
+        const t = localStorage.getItem(getLocalKey('transactions'));
+        const c = localStorage.getItem(getLocalKey('customers'));
+        const d = localStorage.getItem(getLocalKey('pendingDeletes'));
+        if (t) transactions = JSON.parse(t);
+        if (c) customers = JSON.parse(c);
+        if (d) pendingDeletes = JSON.parse(d);
+      } catch (e) { console.warn('Local load failed', e); }
+    }
+
+    // ============================================
+    // Firestore CRUD
+    // ============================================
+    function getTxnRef() {
+      return db.collection('users').doc(currentUser.uid).collection('transactions');
+    }
+    function getCustRef() {
+      return db.collection('users').doc(currentUser.uid).collection('customers');
+    }
+
+    async function loadFromFirestore() {
+      if (!currentUser) return;
+      try {
+        const txnSnap = await getTxnRef().get();
+        transactions = txnSnap.docs.map(d => ({ ...d.data(), id: d.id }));
+        const custSnap = await getCustRef().get();
+        customers = custSnap.docs.map(d => ({ ...d.data(), id: d.id }));
+        saveLocal();
+        updateAllUI();
+      } catch (e) {
+        console.warn('Firestore load failed, using local', e);
+        loadLocal();
+        updateAllUI();
+      }
+    }
+
+    async function addTransaction(txnData) {
+      const id = genId();
+      const txn = { ...txnData, id };
+      transactions.push(txn);
+      try {
+        const { id: _, ...fsData } = txn;
+        await getTxnRef().doc(id).set(fsData);
+      } catch (e) {
+        console.warn('Firestore write failed (offline?)', e);
+      }
+      saveLocal();
+      updateAllUI();
+      return txn;
+    }
+
+    async function addCustomer(custData) {
+      const id = genId();
+      const cust = { ...custData, id };
+      customers.push(cust);
+      try {
+        const { id: _, ...fsData } = cust;
+        await getCustRef().doc(id).set(fsData);
+      } catch (e) {
+        console.warn('Firestore write failed (offline?)', e);
+      }
+      saveLocal();
+      updateAllUI();
+      return cust;
+    }
+
+    async function updateCustomer(id, updates) {
+      const idx = customers.findIndex(c => c.id === id);
+      if (idx >= 0) customers[idx] = { ...customers[idx], ...updates };
+      try { await getCustRef().doc(id).update(updates); } catch (e) { console.warn('offline update', e); }
+      saveLocal();
+      updateAllUI();
+    }
+
+    async function deleteTransaction(id) {
+      transactions = transactions.filter(t => t.id !== id);
+      try { await getTxnRef().doc(id).delete(); } catch (e) {
+        pendingDeletes.push({ type: 'transaction', id, ts: Date.now() });
+      }
+      saveLocal();
+      updateAllUI();
+    }
+
+    async function deleteCustomer(id) {
+      customers = customers.filter(c => c.id !== id);
+      try { await getCustRef().doc(id).delete(); } catch (e) {
+        pendingDeletes.push({ type: 'customer', id, ts: Date.now() });
+      }
+      saveLocal();
+      updateAllUI();
+    }
+
+    async function syncPendingDeletes() {
+      if (!isOnline || !currentUser || pendingDeletes.length === 0) return;
+      const el = $('syncIndicator');
+      el.className = 'sync-indicator syncing';
+      el.innerHTML = '<i class="fas fa-arrows-rotate fa-spin"></i> সিঙ্ক...';
+      const queue = [...pendingDeletes];
+      pendingDeletes = [];
+      for (const item of queue) {
+        try {
+          if (item.type === 'transaction') await getTxnRef().doc(item.id).delete();
+          else await getCustRef().doc(item.id).delete();
+        } catch (e) { pendingDeletes.push(item); }
+      }
+      saveLocal();
+      updateSyncIndicator();
+    }
+
+    async function syncLocalToFirestore() {
+      if (!isOnline || !currentUser) return;
+      const el = $('syncIndicator');
+      el.className = 'sync-indicator syncing';
+      el.innerHTML = '<i class="fas fa-arrows-rotate fa-spin"></i> সিঙ্ক...';
+      try {
+        const existingTxn = await getTxnRef().get();
+        const existTxnIds = new Set(existingTxn.docs.map(d => d.id));
+        for (const txn of transactions) {
+          if (!existTxnIds.has(txn.id)) {
+            const { id, ...data } = txn;
+            await getTxnRef().doc(txn.id).set(data);
+          }
+        }
+        const existingCust = await getCustRef().get();
+        const existCustIds = new Set(existingCust.docs.map(d => d.id));
+        for (const cust of customers) {
+          if (!existCustIds.has(cust.id)) {
+            const { id, ...data } = cust;
+            await getCustRef().doc(cust.id).set(data);
+          }
+        }
+      } catch (e) { console.warn('Sync failed', e); }
+      await syncPendingDeletes();
+      await loadFromFirestore();
+      updateSyncIndicator();
+    }
+
+    // ============================================
+    // UI আপডেট
+    // ============================================
+    function updateAllUI() {
+      updateStats();
+      renderHistory();
+      renderCustomers();
+      rebuildMonthlyData($('filterMonth') ? $('filterMonth').value : null);
+      updateProfileBtn();
+    }
+
+    function updateStats() {
+      let totalBuy = 0, totalSell = 0, totalDue = 0;
+      transactions.forEach(t => {
+        if (t.type === 'buy') totalBuy += t.amount;
+        else if (t.type === 'sell') {
+          totalSell += t.amount;
+          if (t.paymentType === 'due') totalDue += t.amount;
+        }
+      });
+      const diff = totalSell - totalBuy;
+      const profit = diff >= 0 ? diff : 0;
+      const loss = diff < 0 ? Math.abs(diff) : 0;
+
+      $('totalBuy').textContent = formatCurrency(totalBuy);
+      $('totalSell').textContent = formatCurrency(totalSell);
+      $('totalProfit').textContent = formatCurrency(profit);
+      $('totalLoss').textContent = formatCurrency(loss);
+
+      const remainingStock = Math.max(0, totalBuy - totalSell);
+      const soldFromStock = Math.min(totalSell, totalBuy);
+      $('stockTotalBuy').textContent = formatCurrency(totalBuy);
+      $('stockSold').textContent = formatCurrency(soldFromStock);
+      $('stockRemaining').textContent = formatCurrency(remainingStock);
+
+      if (remainingStock > 0) {
+        $('stockRemainingSub').textContent = 'BDT (বিক্রি করতে হবে)';
+        $('stockRemainingItem').classList.add('warning');
+      } else {
+        $('stockRemainingSub').textContent = 'BDT (সব বিক্রি!)';
+        $('stockRemainingItem').classList.remove('warning');
+      }
+
+      $('totalCustomers').textContent = customers.length;
+      $('totalDue').textContent = formatCurrency(totalDue);
+      $('coverTotalBuy').textContent = formatCurrency(totalBuy);
+      $('coverTotalSell').textContent = formatCurrency(totalSell);
+
+      const needToSell = Math.max(0, totalBuy - totalSell);
+      const profitAmount = Math.max(0, totalSell - totalBuy);
+
+      if (totalBuy === 0 && totalSell === 0) {
+        $('coverAmount').textContent = '0';
+        $('coverLabelText').textContent = 'কোনো লেনদেন নেই';
+        $('coverStatus').textContent = 'চালু করুন';
+        $('coverStatus').style.background = '#f1f5f9';
+        $('coverStatus').style.color = '#334155';
+      } else if (totalSell < totalBuy) {
+        $('coverAmount').textContent = formatCurrency(needToSell);
+        $('coverLabelText').textContent = 'লোকসান কাটাতে বিক্রি করতে হবে';
+        $('coverStatus').textContent = 'আরও ' + formatCurrency(needToSell) + ' লাগবে';
+        $('coverStatus').style.background = '#fee2e2';
+        $('coverStatus').style.color = '#b91c1c';
+      } else {
+        $('coverAmount').textContent = formatCurrency(profitAmount);
+        $('coverLabelText').textContent = 'আপনি লাভে আছেন!';
+        $('coverStatus').textContent = '+' + formatCurrency(profitAmount) + ' লাভ';
+        $('coverStatus').style.background = '#dcfce7';
+        $('coverStatus').style.color = '#15803d';
+      }
+      $('historyBadge').textContent = transactions.length;
+    }
+
+    function renderHistory() {
+      const filtered = getFilteredTransactionsForHistory();
+      if (filtered.length === 0) {
+        $('historyContainer').innerHTML = '<div class="history-empty">কোনো লেনদেন নেই।</div>';
+        return;
+      }
+      let html = '';
+      [...filtered].reverse().forEach(t => {
+        const dateStr = new Date(t.date).toLocaleDateString('bn-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+        const cls = t.type === 'buy' ? 'buy' : 'sell';
+        const sign = t.type === 'buy' ? '-' : '+';
+        let info = '';
+        if (t.customerName) info += ' · ' + t.customerName;
+        if (t.paymentType) info += ' · ' + (t.paymentType === 'paid' ? 'পেমেন্ট' : 'বাকি');
+        html += '<div class="history-item"><div class="h-left"><span class="h-title">' + (t.title || (t.type === 'buy' ? 'বিনিয়োগ' : 'বিক্রয়')) + '</span><span class="h-desc">' + (t.description || '') + info + ' · ' + dateStr + '</span></div><div class="h-right ' + cls + '">' + sign + ' ৳' + formatCurrency(t.amount) + '</div></div>';
+      });
+      $('historyContainer').innerHTML = html;
+    }
+
+    function renderCustomers() {
+      const q = ($('customerSearchInput') ? $('customerSearchInput').value : '').toLowerCase();
+      let filtered = customers;
+      if (q) {
+        filtered = customers.filter(c =>
+          c.name.toLowerCase().includes(q) ||
+          (c.phone && c.phone.includes(q)) ||
+          (c.address && c.address.toLowerCase().includes(q))
+        );
+      }
+      if (filtered.length === 0) {
+        $('customerListContainer').innerHTML = '<div class="customer-empty">' + (customers.length === 0 ? 'কোনো কাস্টমার নেই।' : 'কাস্টমার পাওয়া যায়নি।') + '</div>';
+        return;
+      }
+      let html = '';
+      filtered.forEach(c => {
+        const due = getCustomerDue(c.name);
+        const cnt = getCustomerTransactions(c.name).length;
+        html += '<div class="customer-card-item"><div class="cust-info"><div class="cust-name">' + c.name + '</div><div class="cust-details">' + (c.phone || 'N/A') + ' · ' + (c.address || 'N/A') + ' · ' + cnt + ' লেনদেন</div></div><div class="cust-due">' + (due > 0 ? '৳' + formatCurrency(due) : '✅ ০') + '</div><div class="cust-actions"><button class="view-btn" onclick="window._viewCustomer(\'' + c.id + '\')"><i class="fas fa-eye"></i> দেখুন</button><button class="edit-btn" onclick="window._editCustomer(\'' + c.id + '\')"><i class="fas fa-pen"></i> সম্পাদনা</button><button class="delete-btn" onclick="window._deleteCustomer(\'' + c.id + '\')"><i class="fas fa-trash-can"></i></button></div></div>';
+      });
+      $('customerListContainer').innerHTML = html;
+    }
+
+    function getCustomerDue(name) {
+      let due = 0;
+      transactions.forEach(t => {
+        if (t.type === 'sell' && t.customerName === name && t.paymentType === 'due') due += t.amount;
+      });
+      return due;
+    }
+
+    function getCustomerTransactions(name) {
+      return transactions.filter(t => t.customerName === name);
+    }
+
+    function getFilteredTransactionsForHistory() {
+      return transactions.filter(t => {
+        const d = new Date(t.date);
+        let m = true;
+        if (currentHistoryFilter.date) {
+          const fd = new Date(currentHistoryFilter.date);
+          m = m && d.getFullYear() === fd.getFullYear() && d.getMonth() === fd.getMonth() && d.getDate() === fd.getDate();
+        }
+        if (currentHistoryFilter.month) {
+          const [y, mo] = currentHistoryFilter.month.split('-').map(Number);
+          m = m && d.getFullYear() === y && d.getMonth() === mo - 1;
+        }
+        if (currentHistoryFilter.year) {
+          m = m && d.getFullYear() === parseInt(currentHistoryFilter.year);
+        }
+        return m;
+      });
+    }
+
+    function getFilteredTransactions(fm) {
+      if (!fm) return transactions;
+      const [y, mo] = fm.split('-').map(Number);
+      return transactions.filter(t => { const d = new Date(t.date); return d.getFullYear() === y && d.getMonth() === mo - 1; });
+    }
+
+    // ============================================
+    // চার্ট ও বিশ্লেষণ
+    // ============================================
+    function rebuildMonthlyData(filterMonth) {
+      const md = {};
+      const filtered = getFilteredTransactions(filterMonth);
+      filtered.forEach(t => {
+        const d = new Date(t.date);
+        const key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+        if (!md[key]) md[key] = { buy: 0, sell: 0, profit: 0, loss: 0 };
+        if (t.type === 'buy') md[key].buy += t.amount;
+        else md[key].sell += t.amount;
+      });
+      Object.keys(md).forEach(k => {
+        const diff = md[k].sell - md[k].buy;
+        md[k].profit = diff >= 0 ? diff : 0;
+        md[k].loss = diff < 0 ? Math.abs(diff) : 0;
+      });
+      updateChart(md);
+      updateAnalysisFilteredStats(filterMonth);
+      updateAnalysisSummary();
+    }
+
+    function updateChart(md) {
+      const sorted = Object.keys(md).sort();
+      const mn = ['জানু','ফেব্রু','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্ট','অক্টো','নভে','ডিসে'];
+      let labels = sorted.map(m => { const [y, mo] = m.split('-'); return mn[parseInt(mo) - 1] + ' ' + y.slice(2); });
+      let buyD = sorted.map(m => md[m].buy);
+      let sellD = sorted.map(m => md[m].sell);
+      let profitD = sorted.map(m => md[m].profit);
+      let lossD = sorted.map(m => md[m].loss);
+      const has = labels.length > 0;
+      const ctx = $('analysisChart').getContext('2d');
+      if (chartInstance) chartInstance.destroy();
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: has ? labels : ['কোনো তথ্য নেই'],
+          datasets: [
+            { label: 'ক্রয়', data: has ? buyD : [0], backgroundColor: 'rgba(37,99,235,0.7)', borderRadius: 6, barPercentage: 0.3 },
+            { label: 'বিক্রয়', data: has ? sellD : [0], backgroundColor: 'rgba(22,163,74,0.7)', borderRadius: 6, barPercentage: 0.3 },
+            { label: 'লাভ', data: has ? profitD : [0], backgroundColor: 'rgba(124,58,237,0.75)', borderRadius: 6, barPercentage: 0.25 },
+            { label: 'ক্ষতি', data: has ? lossD : [0], backgroundColor: 'rgba(220,38,38,0.75)', borderRadius: 6, barPercentage: 0.25 }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { labels: { boxWidth: 12, font: { size: 8 }, color: '#334155' } } },
+          scales: {
+            y: { beginAtZero: true, grid: { color: '#eef2f6' }, ticks: { callback: v => '৳' + v, font: { size: 8 } } },
+            x: { grid: { display: false }, ticks: { font: { size: 8 } } }
+          },
+          animation: { duration: 700, easing: 'easeOutQuart' }
+        }
+      });
+    }
+
+    function updateAnalysisFilteredStats(fm) {
+      const filtered = getFilteredTransactions(fm);
+      let buy = 0, sell = 0;
+      filtered.forEach(t => { if (t.type === 'buy') buy += t.amount; else if (t.type === 'sell') sell += t.amount; });
+      const diff = sell - buy;
+      $('analysisFilteredBuy').textContent = formatCurrency(buy);
+      $('analysisFilteredSell').textContent = formatCurrency(sell);
+      $('analysisFilteredProfit').textContent = formatCurrency(diff >= 0 ? diff : 0);
+      $('analysisFilteredLoss').textContent = formatCurrency(diff < 0 ? Math.abs(diff) : 0);
+    }
+
+    function updateAnalysisSummary() {
+      const now = new Date();
+      // গত মাস
+      const lmS = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const lmE = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59);
+      let lmB = 0, lmS2 = 0;
+      transactions.forEach(t => {
+        const d = new Date(t.date);
+        if (d >= lmS && d <= lmE) { if (t.type === 'buy') lmB += t.amount; else lmS2 += t.amount; }
+      });
+      const lmDiff = lmS2 - lmB;
+      $('analysisLastMonth').textContent = (lmDiff >= 0 ? '+' : '-') + formatCurrency(Math.abs(lmDiff));
+      $('analysisLastMonth').style.color = lmDiff >= 0 ? '#16a34a' : '#dc2626';
+      // গত বছর
+      const lyS = new Date(now.getFullYear() - 1, 0, 1);
+      const lyE = new Date(now.getFullYear() - 1, 11, 31, 23, 59, 59);
+      let lyB = 0, lyS2 = 0;
+      transactions.forEach(t => {
+        const d = new Date(t.date);
+        if (d >= lyS && d <= lyE) { if (t.type === 'buy') lyB += t.amount; else lyS2 += t.amount; }
+      });
+      const lyDiff = lyS2 - lyB;
+      $('analysisLastYear').textContent = (lyDiff >= 0 ? '+' : '-') + formatCurrency(Math.abs(lyDiff));
+      $('analysisLastYear').style.color = lyDiff >= 0 ? '#16a34a' : '#dc2626';
+    }
+
+    // ============================================
+    // পপআপ সিস্টেম
+    // ============================================
+    function openPopup(mode, extraData) {
+      currentPopupMode = mode;
+      selectedCustomerId = null;
+      editingCustomerId = null;
+      paymentType = 'paid';
+      $('popupBox').classList.remove('login-popup-box');
+
+      if (mode === 'buy') {
+        $('popupTitle').innerHTML = '<i class="fas fa-cart-shopping" style="color:#2563eb"></i> ক্রয় (বিনিয়োগ)';
+        $('popupFields').innerHTML = '<label>টাকার পরিমাণ *</label><input type="number" id="pAmount" placeholder="0" min="0" inputmode="numeric"><label>বিবরণ</label><input type="text" id="pDesc" placeholder="কী কিনলেন?"><label>তারিখ</label><input type="date" id="pDate" value="' + new Date().toISOString().split('T')[0] + '">';
+        $('popupActions').innerHTML = '<button class="btn-cancel" onclick="closePopup()">বাতিল</button><button class="btn-confirm" onclick="handleBuy()">সংরক্ষণ</button>';
+
+      } else if (mode === 'sell') {
+        $('popupTitle').innerHTML = '<i class="fas fa-cash-register" style="color:#16a34a"></i> বিক্রয় (স্টক থেকে)';
+        $('popupFields').innerHTML = '<label>কাস্টমার সিলেক্ট করুন *</label><div class="cust-search-wrap"><input type="text" id="pCustSearch" placeholder="নাম বা ফোন লিখে খুঁজুন..." autocomplete="off"><div class="cust-dropdown" id="pCustDropdown"></div></div><input type="hidden" id="pCustId" value=""><input type="hidden" id="pCustName" value=""><label>টাকার পরিমাণ *</label><input type="number" id="pAmount" placeholder="0" min="0" inputmode="numeric"><label>পেমেন্ট টাইপ</label><div class="payment-type-group"><button class="paid active" onclick="setPaymentType(\'paid\',this)">✅ পেইড</button><button class="due" onclick="setPaymentType(\'due\',this)">⏳ বাকি</button></div><label>বিবরণ</label><input type="text" id="pDesc" placeholder="কী বিক্রি করলেন?"><label>তারিখ</label><input type="date" id="pDate" value="' + new Date().toISOString().split('T')[0] + '">';
+        $('popupActions').innerHTML = '<button class="btn-cancel" onclick="closePopup()">বাতিল</button><button class="btn-confirm" onclick="handleSell()" style="background:#16a34a">বিক্রয় সংরক্ষণ</button>';
+        setTimeout(() => setupCustSearchInPopup(), 50);
+
+      } else if (mode === 'manual_sell') {
+        // ★ সরাসরি বিক্রয় - শুধু টাইটেল + টাকা
+        $('popupTitle').innerHTML = '<i class="fas fa-hand-holding-dollar" style="color:#92400e"></i> সরাসরি বিক্রয়';
+        $('popupFields').innerHTML = '<label>বিবরণ / কারণ *</label><input type="text" id="pManualTitle" placeholder="যেমন: নগদ বিক্রি, প্রাইভেট অর্ডার..."><label>টাকার পরিমাণ *</label><input type="number" id="pAmount" placeholder="0" min="0" inputmode="numeric">';
+        $('popupActions').innerHTML = '<button class="btn-cancel" onclick="closePopup()">বাতিল</button><button class="btn-confirm" onclick="handleManualSell()" style="background:#92400e">সংরক্ষণ</button>';
+
+      } else if (mode === 'customer_view') {
+        renderCustomerViewPopup(extraData);
+        return;
+      } else if (mode === 'customer_edit') {
+        renderCustomerEditPopup(extraData);
+        return;
+      } else if (mode === 'customer_add') {
+        $('popupTitle').innerHTML = '<i class="fas fa-user-plus" style="color:#2563eb"></i> নতুন কাস্টমার';
+        $('popupFields').innerHTML = '<label>নাম *</label><input type="text" id="pCustNameInput" placeholder="কাস্টমারের নাম"><label>ফোন নম্বর</label><input type="text" id="pCustPhone" placeholder="01XXXXXXXXX" inputmode="tel"><label>ঠিকানা</label><input type="text" id="pCustAddress" placeholder="ঠিকানা">';
+        $('popupActions').innerHTML = '<button class="btn-cancel" onclick="closePopup()">বাতিল</button><button class="btn-confirm" onclick="handleAddCustomer()">যোগ করুন</button>';
+      }
+
+      $('popupOverlay').classList.add('active');
+    }
+
+    function closePopup() {
+      $('popupOverlay').classList.remove('active');
+      const dd = document.getElementById('pCustDropdown');
+      if (dd) dd.classList.remove('show');
+    }
+
+    // ============================================
+    // কাস্টমার সার্চ (পপআপে) - সম্পূর্ণ ফিক্সড
+    // ============================================
+    function setupCustSearchInPopup() {
+      const searchInput = document.getElementById('pCustSearch');
+      const dropdown = document.getElementById('pCustDropdown');
+      if (!searchInput || !dropdown) return;
+
+      // পুরনো ইভেন্ট রিমুভ করে নতুন করি (ডুপ্লিকেট প্রতিরোধ)
+      const newSearch = searchInput.cloneNode(true);
+      searchInput.parentNode.replaceChild(newSearch, searchInput);
+
+      // ফোকাসে সব কাস্টমার দেখাও
+      newSearch.addEventListener('focus', function () {
+        renderCustDropdown(this.value);
+      });
+
+      // ইনপুটে ফিল্টার
+      newSearch.addEventListener('input', function (e) {
+        e.stopPropagation();
+        renderCustDropdown(this.value);
+        document.getElementById('pCustId').value = '';
+        document.getElementById('pCustName').value = '';
+        selectedCustomerId = null;
+      });
+
+      // কীডাউনে নেভিগেশন
+      newSearch.addEventListener('keydown', function (e) {
+        const items = dropdown.querySelectorAll('.cust-drop-item');
+        if (!items.length) return;
+        let active = dropdown.querySelector('.cust-drop-item.hovered');
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (active) active.classList.remove('hovered');
+          active = items[[...items].indexOf(active) + 1] || items[0];
+          active.classList.add('hovered');
+          active.scrollIntoView({ block: 'nearest' });
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (active) active.classList.remove('hovered');
+          active = items[[...items].indexOf(active) - 1] || items[items.length - 1];
+          active.classList.add('hovered');
+          active.scrollIntoView({ block: 'nearest' });
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (active) active.click();
+        } else if (e.key === 'Escape') {
+          dropdown.classList.remove('show');
+        }
+      });
+
+      // বাইরে ক্লিকে ড্রপডাউন বন্ধ
+      document.addEventListener('click', function handler(e) {
+        if (!e.target.closest('.cust-search-wrap')) {
+          dropdown.classList.remove('show');
+        }
+      });
+    }
+
+    function renderCustDropdown(query) {
+      const dropdown = document.getElementById('pCustDropdown');
+      if (!dropdown) return;
+      const q = (query || '').toLowerCase().trim();
+      let filtered = customers;
+      if (q) {
+        filtered = customers.filter(c =>
+          c.name.toLowerCase().includes(q) ||
+          (c.phone && c.phone.includes(q)) ||
+          (c.address && c.address.toLowerCase().includes(q))
+        );
+      }
+
+      if (filtered.length === 0) {
+        dropdown.innerHTML = '<div style="padding:0.8rem;text-align:center;color:#94a3b8;font-size:0.85rem;">কাস্টমার পাওয়া যায়নি। <span style="color:#2563eb;cursor:pointer;text-decoration:underline;" onclick="closePopup();openPopup(\'customer_add\')">নতুন যোগ করুন</span></div>';
+        dropdown.classList.add('show');
+        return;
+      }
+
+      let html = '';
+      filtered.forEach(c => {
+        const due = getCustomerDue(c.name);
+        html += '<div class="cust-drop-item" data-id="' + c.id + '" data-name="' + c.name.replace(/"/g, '&quot;') + '" onclick="selectCustFromDropdown(this)">' +
+          '<span><strong>' + c.name + '</strong></span>' +
+          '<span class="cust-drop-phone">' + (c.phone || '') + (due > 0 ? ' · বাকি: ৳' + formatCurrency(due) : '') + '</span></div>';
+      });
+      dropdown.innerHTML = html;
+      dropdown.classList.add('show');
+    }
+
+    function selectCustFromDropdown(el) {
+      const id = el.getAttribute('data-id');
+      const name = el.getAttribute('data-name');
+      selectedCustomerId = id;
+
+      const searchInput = document.getElementById('pCustSearch');
+      const dropdown = document.getElementById('pCustDropdown');
+
+      if (searchInput) searchInput.value = name;
+      const cidEl = document.getElementById('pCustId');
+      const cnameEl = document.getElementById('pCustName');
+      if (cidEl) cidEl.value = id;
+      if (cnameEl) cnameEl.value = name;
+
+      dropdown.querySelectorAll('.cust-drop-item').forEach(i => i.classList.remove('selected', 'hovered'));
+      el.classList.add('selected');
+      setTimeout(() => dropdown.classList.remove('show'), 150);
+    }
+
+    function setPaymentType(type, btn) {
+      paymentType = type;
+      btn.closest('.payment-type-group').querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    // ============================================
+    // হ্যান্ডলার
+    // ============================================
+    function handleBuy() {
+      const amount = parseFloat($('pAmount').value);
+      if (!amount || amount <= 0) { showToast('টাকার পরিমাণ দিন', 'error'); return; }
+      addTransaction({
+        type: 'buy', amount, description: $('pDesc').value.trim(),
+        title: 'বিনিয়োগ', date: $('pDate').value || new Date().toISOString().split('T')[0],
+        customerName: '', paymentType: ''
+      });
+      closePopup();
+      showToast('ক্রয় সংরক্ষিত হয়েছে', 'success');
+    }
+
+    function handleSell() {
+      const custName = document.getElementById('pCustName') ? document.getElementById('pCustName').value : '';
+      const amount = parseFloat($('pAmount').value);
+      if (!custName) { showToast('কাস্টমার সিলেক্ট করুন', 'error'); return; }
+      if (!amount || amount <= 0) { showToast('টাকার পরিমাণ দিন', 'error'); return; }
+      addTransaction({
+        type: 'sell', amount, description: $('pDesc').value.trim(),
+        title: 'বিক্রয়', date: $('pDate').value || new Date().toISOString().split('T')[0],
+        customerName: custName, customerId: document.getElementById('pCustId').value,
+        paymentType: paymentType
+      });
+      closePopup();
+      showToast('বিক্রয় সংরক্ষিত হয়েছে', 'success');
+    }
+
+    // ★ সরাসরি বিক্রয় হ্যান্ডলার - শুধু টাইটেল + টাকা
+    function handleManualSell() {
+      const title = $('pManualTitle').value.trim();
+      const amount = parseFloat($('pAmount').value);
+      if (!title) { showToast('বিবরণ দিন', 'error'); return; }
+      if (!amount || amount <= 0) { showToast('টাকার পরিমাণ দিন', 'error'); return; }
+      addTransaction({
+        type: 'sell', amount, description: title,
+        title: 'সরাসরি বিক্রয়', date: new Date().toISOString().split('T')[0],
+        customerName: '', paymentType: 'paid', isManualSell: true
+      });
+      closePopup();
+      showToast('সরাসরি বিক্রয় সংরক্ষিত', 'success');
+    }
+
+    function handleAddCustomer() {
+      const name = $('pCustNameInput').value.trim();
+      if (!name) { showToast('নাম দিন', 'error'); return; }
+      if (customers.find(c => c.name.toLowerCase() === name.toLowerCase())) {
+        showToast('এই নামে কাস্টমার আছে', 'error'); return;
+      }
+      addCustomer({ name, phone: $('pCustPhone').value.trim(), address: $('pCustAddress').value.trim() });
+      closePopup();
+      showToast('কাস্টমার যোগ হয়েছে', 'success');
+    }
+
+    function renderCustomerViewPopup(custId) {
+      const c = customers.find(x => x.id === custId);
+      if (!c) return;
+      const txns = getCustomerTransactions(c.name);
+      const due = getCustomerDue(c.name);
+      let txnHtml = '';
+      if (txns.length === 0) {
+        txnHtml = '<div style="text-align:center;color:#94a3b8;padding:1rem;">কোনো লেনদেন নেই</div>';
+      } else {
+        [...txns].reverse().forEach(t => {
+          const ds = new Date(t.date).toLocaleDateString('bn-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+          const cls = t.type === 'buy' ? 'buy' : 'sell';
+          const sign = t.type === 'buy' ? '-' : '+';
+          const pt = t.paymentType === 'due' ? ' · ⏳বাকি' : '';
+          txnHtml += '<div class="history-item"><div class="h-left"><span class="h-title">' + (t.title || t.type) + '</span><span class="h-desc">' + (t.description || '') + pt + ' · ' + ds + '</span></div><div class="h-right ' + cls + '">' + sign + ' ৳' + formatCurrency(t.amount) + '</div></div>';
+        });
+      }
+      $('popupTitle').innerHTML = '<i class="fas fa-user" style="color:#2563eb"></i> ' + c.name;
+      $('popupFields').innerHTML =
+        '<div style="background:#f8fafc;border-radius:16px;padding:0.8rem;margin-bottom:0.8rem;display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">' +
+        '<div><div style="font-size:0.6rem;color:#64748b;text-transform:uppercase;">ফোন</div><div style="font-weight:600;font-size:0.9rem;">' + (c.phone || 'N/A') + '</div></div>' +
+        '<div><div style="font-size:0.6rem;color:#64748b;text-transform:uppercase;">ঠিকানা</div><div style="font-weight:600;font-size:0.9rem;">' + (c.address || 'N/A') + '</div></div>' +
+        '<div><div style="font-size:0.6rem;color:#64748b;text-transform:uppercase;">মোট লেনদেন</div><div style="font-weight:600;font-size:0.9rem;">' + txns.length + '</div></div>' +
+        '<div><div style="font-size:0.6rem;color:#64748b;text-transform:uppercase;">বাকি</div><div style="font-weight:700;font-size:0.9rem;color:' + (due > 0 ? '#dc2626' : '#16a34a') + ';">৳' + formatCurrency(due) + '</div></div></div>' +
+        '<div style="font-size:0.85rem;font-weight:600;color:#0b1a33;margin-bottom:0.5rem;">লেনদেন তালিকা</div>' +
+        '<div style="max-height:200px;overflow-y:auto;">' + txnHtml + '</div>';
+      $('popupActions').innerHTML = '<button class="btn-cancel" onclick="closePopup()">বন্ধ</button><button class="btn-danger" onclick="closePopup();window._deleteCustomer(\'' + c.id + '\')"><i class="fas fa-trash-can"></i> ডিলিট</button>';
+      $('popupOverlay').classList.add('active');
+    }
+
+    function renderCustomerEditPopup(custId) {
+      const c = customers.find(x => x.id === custId);
+      if (!c) return;
+      editingCustomerId = custId;
+      $('popupTitle').innerHTML = '<i class="fas fa-user-pen" style="color:#92400e"></i> কাস্টমার সম্পাদনা';
+      $('popupFields').innerHTML =
+        '<label>নাম *</label><input type="text" id="pEditCustName" value="' + c.name + '">' +
+        '<label>ফোন</label><input type="text" id="pEditCustPhone" value="' + (c.phone || '') + '" inputmode="tel">' +
+        '<label>ঠিকানা</label><input type="text" id="pEditCustAddress" value="' + (c.address || '') + '">';
+      $('popupActions').innerHTML = '<button class="btn-cancel" onclick="closePopup()">বাতিল</button><button class="btn-confirm" onclick="handleEditCustomer()">আপডেট</button>';
+      $('popupOverlay').classList.add('active');
+    }
+
+    function handleEditCustomer() {
+      const name = $('pEditCustName').value.trim();
+      if (!name) { showToast('নাম দিন', 'error'); return; }
+      const oldCust = customers.find(c => c.id === editingCustomerId);
+      const oldName = oldCust ? oldCust.name : '';
+      updateCustomer(editingCustomerId, { name, phone: $('pEditCustPhone').value.trim(), address: $('pEditCustAddress').value.trim() });
+      if (oldName && oldName !== name) {
+        transactions.forEach(t => { if (t.customerName === oldName) t.customerName = name; });
+        saveLocal();
+        transactions.filter(t => t.customerName === name).forEach(t => {
+          getTxnRef().doc(t.id).update({ customerName: name }).catch(() => {});
+        });
+      }
+      closePopup();
+      updateAllUI();
+      showToast('কাস্টমার আপডেট হয়েছে', 'success');
+    }
+
+    // গ্লোবাল
+    window._viewCustomer = id => openPopup('customer_view', id);
+    window._editCustomer = id => openPopup('customer_edit', id);
+    window._deleteCustomer = id => {
+      const c = customers.find(x => x.id === id);
+      if (!c) return;
+      if (!confirm('"' + c.name + '" ডিলিট করতে চান? সম্পর্কিত লেনদেনও ডিলিট হবে।')) return;
+      transactions.filter(t => t.customerName === c.name).forEach(t => deleteTransaction(t.id));
+      deleteCustomer(id);
+      showToast('কাস্টমার ডিলিট হয়েছে', 'success');
+    };
+    window.selectCustFromDropdown = selectCustFromDropdown;
+    window.closePopup = closePopup;
+    window.openPopup = openPopup;
+    window.handleBuy = handleBuy;
+    window.handleSell = handleSell;
+    window.handleManualSell = handleManualSell;
+    window.handleAddCustomer = handleAddCustomer;
+    window.handleEditCustomer = handleEditCustomer;
+    window.setPaymentType = setPaymentType;
+
+    // ============================================
+    // অথেনটিকেশন ও প্রোফাইল
+    // ============================================
+    function updateProfileBtn() {
+      const wrap = $('profileBtnWrap');
+      if (currentUser) {
+        const initial = (currentUser.displayName || currentUser.email || '?')[0].toUpperCase();
+        wrap.innerHTML = '<div class="profile-avatar" id="profileAvatarBtn" title="প্রোফাইল">' + initial + '</div>';
+        $('profileAvatarBtn').addEventListener('click', e => { e.stopPropagation(); $('profilePopup').classList.toggle('show'); });
+      } else {
+        wrap.innerHTML = '<div class="login-icon-btn" id="loginBtn" title="লগইন"><i class="fas fa-right-to-bracket"></i></div>';
+        $('loginBtn').addEventListener('click', showLoginPopup);
+      }
+      if (currentUser) {
+        const initial = (currentUser.displayName || currentUser.email || '?')[0].toUpperCase();
+        $('profAvatar').textContent = initial;
+        $('profName').textContent = currentUser.displayName || 'ইউজার';
+        $('profEmail').textContent = currentUser.email || '';
+        $('profTxnCount').textContent = transactions.length;
+        $('profCustCount').textContent = customers.length;
+        let due = 0;
+        transactions.forEach(t => { if (t.type === 'sell' && t.paymentType === 'due') due += t.amount; });
+        $('profDueCount').textContent = formatCurrency(due);
+      }
+    }
+
+    function showLoginPopup() {
+      $('popupTitle').innerHTML = '<i class="fas fa-right-to-bracket" style="color:#2563eb"></i> লগইন করুন';
+      $('popupBox').classList.add('login-popup-box');
+      $('popupFields').innerHTML =
+        '<p style="color:#64748b;font-size:0.85rem;margin-bottom:0.5rem;">আপনার ডাটা সুরক্ষিত রাখতে লগইন করুন। একবার লগইন করলে আর করতে হবে না।</p>' +
+        '<div class="social-btns">' +
+        '<button class="social-btn google" onclick="loginWithGoogle()"><i class="fab fa-google" style="color:#EA4335;"></i> Google দিয়ে লগইন</button>' +
+        '<button class="social-btn github" onclick="loginWithGithub()"><i class="fab fa-github"></i> GitHub দিয়ে লগইন</button></div>' +
+        '<div class="divider">অথবা ইমেইল দিয়ে</div>' +
+        '<label>ইমেইল</label><input type="email" id="loginEmail" placeholder="your@email.com">' +
+        '<label>পাসওয়ার্ড</label><input type="password" id="loginPass" placeholder="পাসওয়ার্ড">';
+      $('popupActions').innerHTML =
+        '<button class="btn-cancel" onclick="closePopup()">বাতিল</button>' +
+        '<button class="btn-confirm" onclick="loginWithEmail()">লগইন</button>' +
+        '<button class="btn-confirm" style="background:#7c3aed" onclick="signupWithEmail()">রেজিস্টার</button>';
+      $('popupOverlay').classList.add('active');
+    }
+
+    async function loginWithGoogle() {
+      try { await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); closePopup(); showToast('সফলভাবে লগইন হয়েছে', 'success'); }
+      catch (e) { showToast('লগইন ব্যর্থ: ' + e.message, 'error'); }
+    }
+    async function loginWithGithub() {
+      try { await auth.signInWithPopup(new firebase.auth.GithubAuthProvider()); closePopup(); showToast('সফলভাবে লগইন হয়েছে', 'success'); }
+      catch (e) { showToast('লগইন ব্যর্থ: ' + e.message, 'error'); }
+    }
+    async function loginWithEmail() {
+      const email = $('loginEmail').value.trim(), pass = $('loginPass').value;
+      if (!email || !pass) { showToast('ইমেইল ও পাসওয়ার্ড দিন', 'error'); return; }
+      try { await auth.signInWithEmailAndPassword(email, pass); closePopup(); showToast('সফলভাবে লগইন হয়েছে', 'success'); }
+      catch (e) { showToast('লগইন ব্যর্থ: ' + e.message, 'error'); }
+    }
+    async function signupWithEmail() {
+      const email = $('loginEmail').value.trim(), pass = $('loginPass').value;
+      if (!email || !pass) { showToast('ইমেইল ও পাসওয়ার্ড দিন', 'error'); return; }
+      if (pass.length < 6) { showToast('পাসওয়ার্ড ৬ অক্ষরের বেশি হতে হবে', 'error'); return; }
+      try { await auth.createUserWithEmailAndPassword(email, pass); closePopup(); showToast('রেজিস্ট্রেশন সফল!', 'success'); }
+      catch (e) { showToast('রেজিস্ট্রেশন ব্যর্থ: ' + e.message, 'error'); }
+    }
+
+    async function handleLogout() {
+      $('profilePopup').classList.remove('show');
+      try { await auth.signOut(); } catch (e) {}
+      currentUser = null;
+      transactions = [];
+      customers = [];
+      pendingDeletes = [];
+      updateAllUI();
+      showToast('লগ আউট হয়েছে', 'success');
+    }
+
+    // ============================================
+    // Auth State Observer
+    // ============================================
+    auth.onAuthStateChanged(async function (user) {
+      currentUser = user;
+      updateSyncIndicator();
+      if (user) {
+        loadLocal();
+        updateAllUI();
+        await loadFromFirestore();
+        if (isOnline) await syncLocalToFirestore();
+      } else {
+        transactions = [];
+        customers = [];
+        pendingDeletes = [];
+        updateAllUI();
+      }
+    });
+
+    // ============================================
+    // অনলাইন/অফলাইন ইভেন্ট
+    // ============================================
+    window.addEventListener('online', async function () {
+      isOnline = true;
+      updateSyncIndicator();
+      if (currentUser) await syncLocalToFirestore();
+    });
+    window.addEventListener('offline', function () {
+      isOnline = false;
+      updateSyncIndicator();
+    });
+
+    // ============================================
+    // নেভিগেশন
+    // ============================================
+    document.querySelectorAll('.nav-item[data-page]').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const page = this.getAttribute('data-page');
+        document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        const target = $('page-' + page);
+        if (target) target.classList.add('active');
+        this.classList.add('active');
+        $('profilePopup').classList.remove('show');
+        if (page === 'analysis') setTimeout(() => rebuildMonthlyData($('filterMonth') ? $('filterMonth').value : null), 100);
+      });
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('#profilePopup') && !e.target.closest('#profileAvatarBtn') && !e.target.closest('#loginBtn')) {
+        $('profilePopup').classList.remove('show');
+      }
+    });
+
+    // ============================================
+    // ইভেন্ট লিসেনার
+    // ============================================
+    $('buyBtn').addEventListener('click', () => { if (!currentUser) { showLoginPopup(); return; } openPopup('buy'); });
+    $('sellBtn').addEventListener('click', () => {
+      if (!currentUser) { showLoginPopup(); return; }
+      if (customers.length === 0) { showToast('প্রথমে কাস্টমার যোগ করুন', 'error'); openPopup('customer_add'); return; }
+      openPopup('sell');
+    });
+    $('manualSellBtn').addEventListener('click', () => { if (!currentUser) { showLoginPopup(); return; } openPopup('manual_sell'); });
+    $('logoutBtn').addEventListener('click', handleLogout);
+    $('applyHistoryFilter').addEventListener('click', () => {
+      currentHistoryFilter = { date: $('historyDateFilter').value || null, month: $('historyMonthFilter').value || null, year: $('historyYearFilter').value || null };
+      renderHistory();
+    });
+    $('resetHistoryFilter').addEventListener('click', () => {
+      currentHistoryFilter = { date: null, month: null, year: null };
+      $('historyDateFilter').value = '';
+      $('historyMonthFilter').value = '';
+      $('historyYearFilter').value = '';
+      renderHistory();
+    });
+    $('customerSearchInput').addEventListener('input', renderCustomers);
+    $('applyFilterBtn').addEventListener('click', () => rebuildMonthlyData($('filterMonth').value));
+    $('resetFilterBtn').addEventListener('click', () => { $('filterMonth').value = ''; rebuildMonthlyData(null); });
+    $('popupOverlay').addEventListener('click', function (e) { if (e.target === this) closePopup(); });
+
+    $('currentDate').textContent = new Date().toLocaleDateString('bn-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+
+    updateAllUI();
+  </script>
+</body>
+</html>
