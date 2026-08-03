@@ -403,12 +403,17 @@
       return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
     }
 
-    function showToast(msg, type) {
+        function showToast(msg, type) {
+      document.querySelectorAll('.toast').forEach(t => t.remove());
       const t = document.createElement('div');
       t.className = 'toast ' + (type || '');
       t.textContent = msg;
       document.body.appendChild(t);
-      setTimeout(() => t.remove(), 2500);
+      setTimeout(() => {
+        t.style.transition = 'opacity 0.3s ease';
+        t.style.opacity = '0';
+        setTimeout(() => t.remove(), 300);
+      }, 2500);
     }
 
     function updateSyncIndicator() {
@@ -1189,21 +1194,36 @@
           var email = $('loginEmail').value.trim();
           var pass = $('loginPass').value;
           if (!email || !pass) { showToast('ইমেইল ও পাসওয়ার্ড লিখুন!', 'error'); return; }
-          auth.signInWithEmailAndPassword(email, pass).catch(function(e) {
+                  auth.signInWithEmailAndPassword(email, pass)
+          .then(function() {
+            closePopup();
+            showToast('✅ লগইন সফল হয়েছে!', 'success');
+          })
+          .catch(function(e) {
             if (e.code === 'auth/user-not-found') {
-              auth.createUserWithEmailAndPassword(email, pass).catch(function(e2) { showToast(e2.message, 'error'); });
+              auth.createUserWithEmailAndPassword(email, pass)
+                .then(function() {
+                  closePopup();
+                  showToast('✅ অ্যাকাউন্ট তৈরি ও লগইন সফল!', 'success');
+                })
+                .catch(function(e2) { showToast(e2.message, 'error'); });
             } else {
               showToast(e.message, 'error');
             }
           });
         });
         return;
-      }
-    }
+        }
+        }
 
-    function closePopup() {
+          loanPaySelectedCustId = null;
+        function closePopup() {
       $('popupOverlay').classList.remove('active');
+      $('popupFields').innerHTML = '';
+      $('popupActions').innerHTML = '';
       currentPopupMode = null;
+      selectedCustomerId = null;
+      editingCustomerId = null;
       loanPaySelectedCustId = null;
     }
 
