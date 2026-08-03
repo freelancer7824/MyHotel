@@ -956,6 +956,7 @@
           });
           showToast('৳' + formatCurrency(amount) + ' ঋণ পরিশোধ সম্পন্ন!', 'success');
           closePopup();
+          location.reload();
         });
 
         searchInput.addEventListener('blur', function() {
@@ -988,6 +989,7 @@
           addTransaction({ type: 'buy', title: titleVal, description: $('popupInputDesc').value.trim(), amount: amountVal, date: new Date().toISOString().split('T')[0] });
           showToast('ক্রয় যোগ হয়েছে!', 'success');
           closePopup();
+          location.reload();
         });
         return;
       }
@@ -1030,6 +1032,7 @@
           addTransaction({ type: 'sell', title: 'স্টক বিক্রয়', description: $('popupInputDesc').value.trim(), amount: amountVal, customerName: custName, paymentType: paymentType, date: new Date().toISOString().split('T')[0] });
           showToast('বিক্রয় যোগ হয়েছে!', 'success');
           closePopup();
+          location.reload();
         });
         return;
       }
@@ -1056,6 +1059,7 @@
           addTransaction({ type: 'sell', title: titleVal, description: '', amount: amountVal, customerName: '', paymentType: 'paid', date: new Date().toISOString().split('T')[0] });
           showToast('সরাসরি বিক্রয় যোগ হয়েছে!', 'success');
           closePopup();
+          location.reload();
         });
         return;
       }
