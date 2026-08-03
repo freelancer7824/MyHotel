@@ -700,12 +700,13 @@
     }
 
     function getCustomerDue(name) {
-      let due = 0;
-      transactions.forEach(t => {
-        if (t.type === 'sell' && t.customerName === name && t.paymentType === 'due') due += t.amount;
-      });
-      return due;
-    }
+  let due = 0;
+  transactions.forEach(t => {
+    if (t.type === 'sell' && t.customerName === name && t.paymentType === 'due') due += t.amount;
+    if (t.type === 'sell' && t.customerName === name && t.paymentType === 'loan-pay') due -= t.amount;
+  });
+  return Math.max(0, due);
+}
 
     function getCustomerTransactions(name) {
       return transactions.filter(t => t.customerName === name);
