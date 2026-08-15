@@ -2703,17 +2703,33 @@ function renderCatSetupStockSelect() {
     container.innerHTML = '<div style="padding:0.5rem;text-align:center;color:var(--text3);font-size:0.8rem;">প্রথমে স্টক যোগ করুন</div>';
     return;
   }
+  
+  const editId = document.getElementById('editCatSetupId').value;
+  const cat = editId ? DB.categories.find(c => c.id === editId) : null;
+  
   container.innerHTML = DB.stocks.map(s => {
     const checked = editingCatStockIds.includes(s.id) ? 'checked' : '';
-    const checkedClass = editingCatStockIds.includes(s.id) ? 'checked-stock' : '';
     const used = getStockUsedQty(s.id);
     const bal = Math.max(0, num(s.totalQty) - used);
     const unit = s.type === 'PS' ? 'পিস' : 'KG';
-    return `<div class="cs-stock-item ${checkedClass}" data-stock-id="${s.id}">
-      <input type="checkbox" ${checked} onchange="toggleCatStock('${s.id}', this.checked)">
-      <span class="csi-name">${s.name}</span>
-      <span class="csi-bal">${s.type==='KG'?bal.toFixed(1):bal} ${unit}</span>
-      <span class="csi-price">${fmt(getStockUnitPrice(s))} ৳/${unit}</span>
+    
+    // Show allocated quantity in stock card
+    let allocatedText = '';
+    if (cat && cat.stockItems) {
+      const si = cat.stockItems.find(item => item.stockId === s.id);
+      if (si && num(si.qty) > 0) {
+        allocatedText = `<span style="font-size:0.6rem;color:var(--amber);font-weight:600;margin-left:0.5rem;">
+          (বর্তমান: ${s.type==='KG'?num(si.qty).toFixed(1):num(si.qty)} ${unit})
+        </span>`;
+      }
+    }
+    
+    return `<div class="cs-stock-item" data-stock-id="${s.id}" style="display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0;border-bottom:1px solid var(--border);">
+      <input type="checkbox" ${checked} onchange="toggleCatStock('${s.id}', this.checked)" style="accent-color:var(--primary);width:18px;height:18px;flex-shrink:0;">
+      <span class="csi-name" style="font-weight:600;flex:1;">${s.name}</span>
+      <span class="csi-bal" style="font-size:0.7rem;color:var(--text3);">বাকি: ${s.type==='KG'?bal.toFixed(1):bal} ${unit}</span>
+      ${allocatedText}
+      <span class="csi-price" style="font-size:0.7rem;color:var(--blue);font-weight:600;">${fmt(getStockUnitPrice(s))} ৳/${unit}</span>
     </div>`;
   }).join('');
 }
@@ -2770,15 +2786,15 @@ document.getElementById('saveCatSetupBtn').addEventListener('click', async () =>
   const name = document.getElementById('catSetupNameInput').value.trim();
   if (!name) { toast('ক্যাটাগরির নাম দিন', 'error'); return; }
   if (editingCatStockIds.length === 0) { toast('কমপক্ষে একটি স্টক নির্বাচন করুন', 'error'); return; }
-
+  
   const stockItems = editingCatStockIds.map(stockId => {
     const stock = DB.stocks.find(s => s.id === stockId);
     const qty = num(document.getElementById('catQty_' + stockId)?.value);
     return { stockId, qty, stockName: stock?.name || '', stockType: stock?.type || 'PS' };
   }).filter(si => si.qty > 0);
-
+  
   if (stockItems.length === 0) { toast('পরিমাণ দিন', 'error'); return; }
-
+  
   for (const si of stockItems) {
     const stock = DB.stocks.find(s => s.id === si.stockId);
     if (!stock) continue;
@@ -2789,54 +2805,127 @@ document.getElementById('saveCatSetupBtn').addEventListener('click', async () =>
       return;
     }
   }
-
+  
   const editId = document.getElementById('editCatSetupId').value;
+  
   if (editId) {
-    const idx = DB.categories.findIndex(c => c.id === editId);
-    if (idx >= 0) {
-      DB.categories[idx] = { ...DB.categories[idx], name, stockItems };
+    // EDIT MODE: Restore old stock quantities first, then deduct new ones
+    const oldCat = DB.categories.find(c => c.id === editId);
+    if (oldCat) {
+      // Restore old stock quantities
+      (oldCat.stockItems || []).forEach(si => {
+        const stock = DB.stocks.find(s => s.id === si.stockId);
+        if (stock) {
+          // Add back the old quantity
+          if (stock.type === 'PS') {
+            stock.totalQty = num(stock.totalQty) + num(si.qty);
+          } else {
+            stock.totalQty = num(stock.totalQty) + num(si.qty);
+          }
+        }
+      });
+      
+      // Now deduct new quantities
+      stockItems.forEach(si => {
+        const stock = DB.stocks.find(s => s.id === si.stockId);
+        if (stock) {
+          // Deduct new quantity permanently
+          if (stock.type === 'PS') {
+            stock.totalQty = Math.max(0, num(stock.totalQty) - num(si.qty));
+          } else {
+            stock.totalQty = Math.max(0, num(stock.totalQty) - num(si.qty));
+          }
+        }
+      });
+      
+      // Update the category
+      const idx = DB.categories.findIndex(c => c.id === editId);
+      if (idx >= 0) {
+        DB.categories[idx] = { ...DB.categories[idx], name, stockItems };
+      }
     }
     toast('ক্যাটাগরি আপডেট হয়েছে');
   } else {
-    DB.categories.push({ id: uid(), name, stockItems, disabled: false, createdAt: nowStr() });
+    // ADD MODE: Deduct stock permanently
+    stockItems.forEach(si => {
+      const stock = DB.stocks.find(s => s.id === si.stockId);
+      if (stock) {
+        if (stock.type === 'PS') {
+          stock.totalQty = Math.max(0, num(stock.totalQty) - num(si.qty));
+        } else {
+          stock.totalQty = Math.max(0, num(stock.totalQty) - num(si.qty));
+        }
+      }
+    });
+    
+    // Create new category
+    DB.categories.push({
+      id: uid(),
+      name,
+      stockItems,
+      disabled: false,
+      createdAt: nowStr()
+    });
     toast('ক্যাটাগরি তৈরি হয়েছে');
   }
+  
   await saveData('cat_save', { name });
+  // Reset editing state
+  editingCatStockIds = [];
+  document.getElementById('editCatSetupId').value = '';
   showPage('catsetup');
 });
 
 function editCatSetup(id) {
   const cat = DB.categories.find(c => c.id === id);
   if (!cat) return;
+  
   document.getElementById('editCatSetupId').value = cat.id;
   document.getElementById('catSetupNameInput').value = cat.name;
   editingCatStockIds = (cat.stockItems || []).map(si => si.stockId);
   document.getElementById('addCatSetupPageTitle').textContent = 'ক্যাটাগরি এডিট';
+  
   renderCatSetupStockSelect();
   renderCatSetupAmountFields();
+  
+  // Show current allocated quantities
   setTimeout(() => {
     (cat.stockItems || []).forEach(si => {
       const input = document.getElementById('catQty_' + si.stockId);
-      if (input) { input.value = si.qty; updateCatCostCalc(si.stockId); }
+      if (input) {
+        input.value = si.qty;
+        updateCatCostCalc(si.stockId);
+      }
     });
   }, 50);
+  
   showPage('add-catsetup');
 }
 
 async function deleteCatSetup(id) {
+  if (!confirm('এই ক্যাটাগরি মুছলে স্টক ফিরিয়ে দেওয়া হবে। চালিয়ে যাবেন?')) return;
+  
+  const cat = DB.categories.find(c => c.id === id);
+  if (cat && cat.stockItems) {
+    // Restore stock quantities
+    cat.stockItems.forEach(si => {
+      const stock = DB.stocks.find(s => s.id === si.stockId);
+      if (stock) {
+        if (stock.type === 'PS') {
+          stock.totalQty = num(stock.totalQty) + num(si.qty);
+        } else {
+          stock.totalQty = num(stock.totalQty) + num(si.qty);
+        }
+      }
+    });
+  }
+  
   DB.categories = DB.categories.filter(c => c.id !== id);
   await saveData('cat_delete', { catId: id });
-  toast('ক্যাটাগরি মুছে ফেলা হয়েছে');
+  toast('ক্যাটাগরি মুছে ফেলা হয়েছে এবং স্টক ফিরিয়ে দেওয়া হয়েছে');
+  editingCatStockIds = [];
   renderAll();
 }
-
-document.getElementById('resetAllCatBtn').addEventListener('click', async () => {
-  if (!confirm('সব ক্যাটাগরির অ্যালোকেশন রিসেট হবে। ক্যাটাগরি মুছবে না, শুধু স্টক ফ্রি হবে। চালিয়ে যাবেন?')) return;
-  DB.categories.forEach(c => { c.stockItems = []; });
-  await saveData('cat_reset_all', {});
-  toast('সব অ্যালোকেশন রিসেট হয়েছে');
-  renderAll();
-});
 
 // ========== প্রোডাক্ট CRUD ==========
 document.getElementById('addProdBtn').addEventListener('click', () => {
